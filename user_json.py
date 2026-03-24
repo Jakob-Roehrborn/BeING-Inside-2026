@@ -6,6 +6,21 @@ from datetime import datetime
 
 from geopy.geocoders import Nominatim
 
+def get_json_value(keys, json_file='user.json'):
+    """
+    Navigiert durch ein Dictionary basierend auf einer Liste von Schlüsseln.
+    """
+    try:
+        with open(json_file, 'r') as f:
+            current = json.load(f)
+            
+        for key in keys:
+            current = current[key]
+        return current
+    except (KeyError, TypeError):
+        print(f"Fehler: Der Pfad {keys} wurde nicht gefunden.")
+        return None
+
 def geolocate(plz):
     geolocator = Nominatim(user_agent="plz_koordinaten")
 

@@ -1,4 +1,5 @@
 import pandas as pd
+from user_json import get_json_value
 
 def load_data(csv_path, cols, separator=','):
     # 'sep' gibt an, welches Trennzeichen genutzt wird
@@ -37,7 +38,7 @@ print(f"Die Aufsummierung aller total_value Werte ergibt: {gesamtsumme_fdh}")
 def heat_pump(value): # Wert kWh pro Jahr user Wärmepumpe, 
     return value * 33.714308790716046 # sum(f_d_h-Spalte*customer_price_gross_ct_per_kwh_konzession_1_32-Spalte)
 
-print(heat_pump(1200)/100) 
+print(heat_pump(get_json_value(["heat_pump", "performance_kWh"]))/100) 
     
 #Optional: Als neue CSV speichern
 #df_combined.to_csv("kombinierte_daten.csv", index=False)
