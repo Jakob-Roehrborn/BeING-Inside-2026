@@ -14,3 +14,8 @@ input[type="number"] {
     -moz-appearance: textfield;
     appearance: textfield;
 }} */
+
+
+@theme {
+    --sachsenrot: rgb(d50037);
+}

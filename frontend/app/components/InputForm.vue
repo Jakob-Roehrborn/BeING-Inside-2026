@@ -6,15 +6,17 @@
 
             <div>
                 <h2
-                    class="text-2xl font-semibold text-slate-900 flex items-center gap-2 border-b-2 border-slate-100 pb-3 mb-6">
+                    class="text-2xl font-semibold text-slate-900 flex items-center gap-2 border-b-2 border-slate-100 pb-3">
                     <span class="text-blue-500 font-mono text-xl"></span>
                     Weitere Angaben
                 </h2>
                 
 
                 <ModulesPV v-model="data.pv"/>
+                <ModulesEV v-model="data.ev" class=""/>
                 <ModulesBattery v-model="data.battery"/>
                 <ModulesHeatPump v-model="data.heat_pump"/>
+               
                 <!-- <div class="space-y-3 mb-8">
                     <label
                         class="flex items-center gap-4 p-4 border rounded-xl border-slate-200 hover:bg-slate-50 cursor-pointer transition">

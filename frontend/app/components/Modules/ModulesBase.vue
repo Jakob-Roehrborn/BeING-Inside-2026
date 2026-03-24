@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex justify-between border-b-2 border-slate-100 pb-2 mb-6">
+        <div class="flex justify-between border-b-2 border-slate-100 pb-2 my-6 bg-slate-100 py-2 px-4 rounded-xl">
 
             <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2 ">
                 {{props.title}}
