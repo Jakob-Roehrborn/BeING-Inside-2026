@@ -3,6 +3,8 @@ import pvlib
 import numpy as np
 import os
 
+from user_json import get_coordinates_from_user, get_solar_from_user
+
 def calculate_tilted_irradiance(csv_path, tilt, azimuth, lat, lon, scenario='mean'):
     """
     Berechnet die Einstrahlung auf einer geneigten Fläche.
@@ -60,26 +62,64 @@ def performance_kw(df, monat, tag, stunde, kwp_anlage):
         return (strahlung / 1000) * kwp_anlage
     return 0.0
 
-# --- ANWENDUNG ---
-PLZ = "01067"
-# Pfad zur Master-Wetterdatei im solar_base Ordner
-DATEI = os.path.join("solar_base", f"weather_master_{PLZ}.csv")
 
-BREITE, LAENGE = 51.05, 13.74
-NEIGUNG, AUSRICHTUNG = 35, 180 
-USER_KWP = 10.0
+def performance_range_sum(df, start_str, end_str, capacity_kwp):
+    """
+    Summiert die Leistung über eine Zeitspanne, indem sie 
+    die bestehende Funktion 'performance_kw' für jede Stunde aufruft.
+    """
+    # 1. Zeitspanne generieren (fiktives Jahr 2023 für die Logik)
+    # Wir erstellen eine Liste aller Stunden zwischen Start und Ende
+    start_dt = pd.to_datetime("2023-" + start_str, format="%Y-%m-%d %H:%M")
+    end_dt = pd.to_datetime("2023-" + end_str, format="%Y-%m-%d %H:%M")
+    
+    # Generiere alle Stunden-Zeitstempel in diesem Bereich
+    hour_range = pd.date_range(start=start_dt, end=end_dt, freq='h')
+    
+    total_kwh = 0.0
+    
+    # 2. Die bestehende Funktion für jede Stunde aufrufen
+    for current_dt in hour_range:
+        m = current_dt.month
+        d = current_dt.day
+        h = current_dt.hour
+        
+        # Aufruf deiner Original-Funktion
+        # Da die Funktion kW zurückgibt und wir über 1 Stunde summieren,
+        # ist kW * 1h = kWh.
+        stunden_ertrag = performance_kw(df, m, d, h, capacity_kwp)
+        total_kwh += stunden_ertrag
+        
+    return total_kwh
+
+def time_range(start_str, end_str):
+        ergebnis = performance_range_sum(ergebnis_df, start_str, end_str, capacity_kwp)
+        print(f"Produzierter Strom im Zeitraum {start_str} - {end_str}: {ergebnis:.2f} kWh")
+
+# JSON-Daten
+lat, lon, plz = get_coordinates_from_user('user.json')
+azimuth, tilt, capacity_kwp, area_sqm = get_solar_from_user('user.json')
+
+# Pfad zur Master-Wetterdatei im solar_base Ordner
+data = os.path.join("solar_base", f"solar_base_{plz}_2020_2025.csv")
+
 WAHL = 'mean' # SZENARIO: 'mean', 'min' oder 'max'
 
 try:
     # Berechnung mit dem gewählten Szenario
-    ergebnis_df = calculate_tilted_irradiance(DATEI, NEIGUNG, AUSRICHTUNG, BREITE, LAENGE, scenario=WAHL)
+    ergebnis_df = calculate_tilted_irradiance(data, azimuth, tilt, lat, lon, scenario=WAHL)
 
-    print(f"\n--- BERECHNUNG FÜR SZENARIO: {WAHL.upper()} ---")
-    print(f"Jahresertrag ({USER_KWP} kWp): {(ergebnis_df['leistung_geneigt'].sum() / 1000 * USER_KWP):,.2f} kWh")
+    if capacity_kwp is not None:
+        print(f"\n--- BERECHNUNG FÜR SZENARIO: {WAHL.upper()} ---")
+        print(f"Jahresertrag ({capacity_kwp} kWp): {(ergebnis_df['leistung_geneigt'].sum() / 1000 * capacity_kwp):,.2f} kWh")
 
-    # Beispielabfrage 02.03. 12:00
-    p_kw = performance_kw(ergebnis_df, 3, 2, 12, USER_KWP)
-    print(f"Leistung am 02.03. 12:00: {p_kw:.2f} kW")
+        # Beispielabfrage 02.03. 12:00
+        p_kw = performance_kw(ergebnis_df, 3, 2, 12, capacity_kwp)
+        print(f"Leistung am 02.03. 12:00: {p_kw:.2f} kW")
+
+        start_str = "01-01 00:00"
+        end_str = "12-31 23:00" #mm-dd
+        time_range(start_str, end_str)
 
 except Exception as e:
     print(f"Fehler: {e}")

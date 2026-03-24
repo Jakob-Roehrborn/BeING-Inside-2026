@@ -72,5 +72,30 @@ def get_coordinates_from_user(json_file='user.json'):
     
     return None, None, None
 
+def get_solar_from_user(json_file='user.json'):
+    try:
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+        
+        # Zugriff über die verschachtelten Schlüssel
+        azimuth = data['solar_system']['azimuth']
+        tilt = data['solar_system']['tilt']
+        capacity_kwp = data['solar_system']['capacity_kwp']
+        area_sqm = data['solar_system']['area_sqm']
+        
+        # Prüfung, ob die Werte schon gesetzt wurden (nicht null sind)
+        if azimuth is None or tilt is None or capacity_kwp is None or area_sqm is None:
+            print("Warnung: Koordinaten sind noch nicht vollständig in der JSON gesetzt!")
+            return None, None, None
+            
+        return azimuth, tilt, capacity_kwp, area_sqm
+
+    except FileNotFoundError:
+        print(f"Fehler: Die Datei {json_file} wurde nicht gefunden.")
+    except KeyError as e:
+        print(f"Fehler: Der Schlüssel {e} fehlt in der JSON-Struktur.")
+    
+    return None, None, None
+
 # Anwendung
 #update_config_from_api('user.json')
