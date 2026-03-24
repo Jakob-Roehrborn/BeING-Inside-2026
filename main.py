@@ -1,7 +1,8 @@
-from user_json import update_config_from_api, get_json_value, get_coordinates_from_user
+from user_json import update_config_from_api, get_json_value, get_coordinates_from_user, get_car_from_user
 from solar_base import generate_weather_master
 from solar_calculation import main_kwp_performance
 from heat_pump import heat_pump
+from eauto import optimierte_ladesimulation
 
 import pandas as pd
 
@@ -31,8 +32,10 @@ if get_json_value(["heat_pump","exist"]):
     #heat_pump_df.to_csv("test_heat_pump.csv", index=False)
 
 if get_json_value(["electrical_car","exist"]):
-    pass
-
+    resutlt = get_car_from_user('user.json')
+    df['car'] = optimierte_ladesimulation(*resutlt).values # .values -> ignoriert Index
+    
+df.to_csv("test_df.csv", index=False)
 if get_json_value(["memory","exist"]):
     pass
 

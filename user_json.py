@@ -95,5 +95,24 @@ def get_solar_from_user(json_file='user.json'):
     
     return None, None, None
 
+def get_car_from_user(json_file='user.json'):
+    try:
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+        
+        # Zugriff über die verschachtelten Schlüssel
+        ziel_jahreskilometer = data['electrical_car']['ziel_jahreskilometer']
+        verbrauch_kwh_pro_100km = data['electrical_car']['verbrauch_kwh_pro_100km']
+        max_leistung_kw = data['electrical_car']['max_leistung_kw']
+            
+        return ziel_jahreskilometer, verbrauch_kwh_pro_100km, max_leistung_kw
+
+    except FileNotFoundError:
+        print(f"Fehler: Die Datei {json_file} wurde nicht gefunden.")
+    except KeyError as e:
+        print(f"Fehler: Der Schlüssel {e} fehlt in der JSON-Struktur.")
+    
+    return None, None, None
+
 # Anwendung
 #update_config_from_api('user.json')
