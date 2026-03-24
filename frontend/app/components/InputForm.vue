@@ -2,39 +2,19 @@
     <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100">
         <div class="space-y-10">
 
-            <div>
-                <h2
-                    class="text-2xl font-semibold text-slate-900 flex items-center gap-2 border-b-2 border-slate-100 pb-3 mb-6">
-                    <span class="text-blue-500 font-mono text-xl">1</span>
-                    Ihre aktuellen Stromdaten
-                </h2>
-
-                <div class="space-y-6">
-                    <div class="form-group">
-                        <label for="consumption" class="block text-sm font-medium text-slate-700 mb-1">
-                            Geschätzter Jahresstromverbrauch
-                        </label>
-                        <div class="relative rounded-md shadow-sm">
-                            <input type="number" id="consumption" v-model="data.household.consumption" placeholder="z.B. 4500"
-                                class="block w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition duration-150 text-lg" />
-                            <div
-                                class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-500">
-                                kWh/Jahr
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="border-slate-100" />
+            <Household v-model="data.household"/>
 
             <div>
                 <h2
                     class="text-2xl font-semibold text-slate-900 flex items-center gap-2 border-b-2 border-slate-100 pb-3 mb-6">
-                    <span class="text-blue-500 font-mono text-xl">2</span>
-                    Ihre Flexibilitätspotenziale
+                    <span class="text-blue-500 font-mono text-xl"></span>
+                    Weitere Angaben
                 </h2>
+                
 
+                <ModulesPV v-model="data.pv"/>
+                <ModulesBattery v-model="data.battery"/>
+                <ModulesHeatPump v-model="data.heat_pump"/>
                 <!-- <div class="space-y-3 mb-8">
                     <label
                         class="flex items-center gap-4 p-4 border rounded-xl border-slate-200 hover:bg-slate-50 cursor-pointer transition">

@@ -1,29 +1,33 @@
 export default interface inputData {
-    pv?: PV,
-    ev?: EV,
-    battery?: Battery,
-    heat_pump?: HeatPump,
+    pv: PV,
+    ev: EV,
+    battery: Battery,
+    heat_pump: HeatPump,
     household: Household
 }
 
 export interface PV {
-    power: number,
-    direction: "North" | "East" | "South" | "West",
-    angle: number
+    present: boolean,
+    power?: number,
+    direction?: "North" | "East" | "South" | "West",
+    angle?: number
 }
 
 export interface Battery {
-    capacity: number
+    present: boolean,
+    capacity?: number
 }
 
 export interface EV {
-    milage: number,
-    charging_time: number,
-    charging_power: number,
+    present: boolean,
+    milage?: number,
+    charging_time?: number,
+    charging_power?: number,
 }
 
 export interface HeatPump {
-    yearly_consumption: number
+    present: boolean,
+    yearly_consumption?: number
 }
 
 export interface Household {

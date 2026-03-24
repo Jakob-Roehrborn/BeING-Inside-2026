@@ -8,9 +8,9 @@
 
 	  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
 		
-		<InputForm v-model="inputData!" :is-loading="isLoading" @submit="calculateSavings"/>
+		<InputForm v-model="inData!" :is-loading="isLoading" @submit="calculateSavings"/>
 		
-		<Output :is-loading="isLoading", :results="outputData!" />
+		<Output :is-loading="isLoading", :results="outData!" />
 		
 	  </div>
 
@@ -23,12 +23,28 @@ import type inputData from './types/inputData';
 import type outputData from './types/outputData';
 
 
-// State für UI
+// // State für UI
 const isLoading = ref(false);
 const results = ref(null);
 
-const inputData = ref<inputData>()
-const outputData = ref<outputData>()
+const inData = ref<inputData>({
+    pv: {
+        present: false
+    },
+    ev: {
+        present: false
+    },
+    battery: {
+        present: false
+    },
+    heat_pump: {
+        present: false
+    },
+    household: {
+        people: 3
+    }
+})
+const outData = ref<outputData | undefined>()
 
 // Funktion, die das Backend aufruft (Dummy Implementation)
 const calculateSavings = async () => {
@@ -53,9 +69,9 @@ const calculateSavings = async () => {
 
 	// Simulation der Backend-Ladezeit
 	await new Promise(resolve => setTimeout(resolve, 1800));
-
+    console.debug(inData.value)
 	// Ergebnisse formatieren und im State speichern
-	outputData.value = {
+	outData.value = {
 	  oldCost: 15000,
 	  newCost: 37,
 	  savings: (15000 - 37),
