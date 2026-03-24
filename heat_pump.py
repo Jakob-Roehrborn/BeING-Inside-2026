@@ -15,7 +15,5 @@ def heat_pump():
         ['timestamp', 'f_d_h'], 
         separator=';'
     )
-
     df['heat_pump'] = df['f_d_h'] * get_json_value(["heat_pump", "performance_kWh_year"])
-
     return df[['heat_pump']] # 'timestamp'

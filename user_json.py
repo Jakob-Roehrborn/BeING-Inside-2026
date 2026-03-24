@@ -57,12 +57,10 @@ def get_coordinates_from_user(json_file='user.json'):
         with open(json_file, 'r') as f:
             data = json.load(f)
         
-        # Zugriff über die verschachtelten Schlüssel
         lat = data['general_info']['coordinates']['latitude']
         lon = data['general_info']['coordinates']['longitude']
         plz = data['general_info']['postal_code']
         
-        # Prüfung, ob die Werte schon gesetzt wurden (nicht null sind)
         if lat is None or lon is None:
             print("Warnung: Koordinaten sind noch nicht in der JSON gesetzt!")
             return None, None, None
@@ -81,7 +79,6 @@ def get_solar_from_user(json_file='user.json'):
         with open(json_file, 'r') as f:
             data = json.load(f)
         
-        # Zugriff über die verschachtelten Schlüssel
         azimuth = data['solar_system']['azimuth']
         tilt = data['solar_system']['tilt']
         capacity_kwp = data['solar_system']['capacity_kwp']
@@ -95,15 +92,14 @@ def get_solar_from_user(json_file='user.json'):
     
     return None, None, None
 
-def get_car_from_user(json_file='user.json'):
+def get_ecar_from_user(json_file='user.json'):
     try:
         with open(json_file, 'r') as f:
             data = json.load(f)
         
-        # Zugriff über die verschachtelten Schlüssel
-        ziel_jahreskilometer = data['electrical_car']['ziel_jahreskilometer']
-        verbrauch_kwh_pro_100km = data['electrical_car']['verbrauch_kwh_pro_100km']
-        max_leistung_kw = data['electrical_car']['max_leistung_kw']
+        ziel_jahreskilometer = data['ecar']['ziel_jahreskilometer']
+        verbrauch_kwh_pro_100km = data['ecar']['verbrauch_kwh_pro_100km']
+        max_leistung_kw = data['ecar']['max_leistung_kw']
             
         return ziel_jahreskilometer, verbrauch_kwh_pro_100km, max_leistung_kw
 
@@ -114,5 +110,4 @@ def get_car_from_user(json_file='user.json'):
     
     return None, None, None
 
-# Anwendung
 #update_config_from_api('user.json')

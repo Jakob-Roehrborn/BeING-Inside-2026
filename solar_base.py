@@ -29,7 +29,6 @@ def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
 
     all_data_frames = []
 
-    # 3. Historische Daten laden
     for year in range(start_year, end_year + 1):
         print(f"Lade Wetterdaten für {year}...")
         url = "https://archive-api.open-meteo.com/v1/archive"
@@ -53,36 +52,32 @@ def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
                     'dhi': h.get('diffuse_radiation'),
                     'dni': h.get('direct_normal_irradiance')
                 })
-                # Schalttage entfernen für einheitliche 8760 Stunden
-                df = df[~((df['time'].dt.month == 2) & (df['time'].dt.day == 29))]
+        
+                df = df[~((df['time'].dt.month == 2) & (df['time'].dt.day == 29))] # ohne Schaltjahre
                 all_data_frames.append(df)
             else:
                 print(f" Keine Daten für {year}")
         except Exception as e:
             print(f" Fehler im Jahr {year}: {e}")
         
-        time.sleep(1.0) # API-Schonung
+        time.sleep(1.0) 
 
     if not all_data_frames:
         print("Keine Daten gefunden!")
         return
 
-    # 4. Statistiken berechnen (Flattening)
     full_df = pd.concat(all_data_frames)
     full_df['mm_dd_hh'] = full_df['time'].dt.strftime('%m-%d %H:00')
 
-    # Gruppierung: Wir holen Mean, Min und Max für alle drei Strahlungsarten
-    master_df = full_df.groupby('mm_dd_hh').agg({
+    master_df = full_df.groupby('mm_dd_hh').agg({ # Gruppierung
         'ghi': ['mean', 'min', 'max'],
         'dhi': ['mean', 'min', 'max'],
         'dni': ['mean', 'min', 'max']
     })
 
-    # Header flach machen: mm_dd_hh, ghi_mean, ghi_min, ghi_max, ...
     master_df.columns = [f"{col[0]}_{col[1]}" for col in master_df.columns.values]
     master_df = master_df.reset_index().sort_values('mm_dd_hh')
 
-    # 5. Speichern
     #filename = os.path.join(output_dir, f"solar_base_{plz}_{start_year}_{end_year}.csv")
     master_df.to_csv(file_path, index=False)
     
@@ -91,7 +86,7 @@ def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
     print(f"Spalten: {', '.join(master_df.columns.tolist())}")
     return master_df
 
-# --- START ---
+
 #update_config_from_api('user.json')
 # lat, lon, plz = get_coordinates_from_user('user.json')
 # weather_data = generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025)

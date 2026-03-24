@@ -3,36 +3,32 @@ import pvlib
 import numpy as np
 import os
 
-from user_json import get_coordinates_from_user, get_solar_from_user
+from user_json import get_solar_from_user
 
 def calculate_tilted_irradiance(csv_path, tilt, azimuth, lat, lon, scenario='mean'):
     """
     Berechnet die Einstrahlung auf einer geneigten Fläche.
     scenario: 'mean', 'min' oder 'max' (entspricht den Suffixen in der Master-CSV)
     """
-    # 1. Master-CSV Laden
+
     df = pd.read_csv(csv_path)
     df = df.sort_values('mm_dd_hh')
     
-    # 2. Zeitstempel für die Geometrie (UTC)
+    # Zeitstempel für die Geometrie (UTC)
     # fiktives Jahr 2023 für die Sonnenstandsberechnung
     times = pd.to_datetime("2023-" + df['mm_dd_hh'], format="%Y-%m-%d %H:%M")
     times_utc = times.dt.tz_localize('UTC')
 
-    # 3. Sonnenstand berechnen
-    solpos = pvlib.solarposition.get_solarposition(times_utc, lat, lon)
+    solpos = pvlib.solarposition.get_solarposition(times_utc, lat, lon) # berechnet Sonnenstand
     
-    # Längen-Check (Sicherheitsnetz)
     if len(solpos) != len(df):
         solpos = solpos.iloc[:len(df)]
 
-    # 4. Spalten dynamisch wählen (z.B. ghi_mean, ghi_min, etc.)
     dni_data = df[f'dni_{scenario}'].to_numpy()
     ghi_data = df[f'ghi_{scenario}'].to_numpy()
     dhi_data = df[f'dhi_{scenario}'].to_numpy()
 
-    # 5. Einstrahlung berechnen
-    total_irrad = pvlib.irradiance.get_total_irradiance(
+    total_irrad = pvlib.irradiance.get_total_irradiance( # Berechnung Einstrahlung
         surface_tilt=tilt,
         surface_azimuth=azimuth,
         dni=dni_data,
@@ -41,8 +37,7 @@ def calculate_tilted_irradiance(csv_path, tilt, azimuth, lat, lon, scenario='mea
         solar_zenith=solpos['zenith'].to_numpy(),
         solar_azimuth=solpos['azimuth'].to_numpy()
     )
-    
-    # Ergebnis in neuen Spalte speichern
+
     df['leistung_geneigt'] = total_irrad['poa_global']
     
     return df
