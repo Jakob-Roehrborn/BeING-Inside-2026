@@ -1,32 +1,29 @@
-# Erstellt csv-Datein mit Wetterdaten für die Berechnung der Solarzelle basierend auf der Postleitzahl
+# Erstellt csv-Datein mit Wetterdaten für die Berechnung der Solarzelle
 # Form: mm_dd_hh,ghi_mean,ghi_min,ghi_max,dhi_mean,dhi_min,dhi_max,dni_mean,dni_min,dni_max
 # mean: Durchschnitt, min: worst-case, max: best-case
+# existiert bereits eine dementsprechende csv-Datei -> keine Neuberechnung
 
 import requests
 import pandas as pd
 import time
 import os
 
+from user_json import get_coordinates_from_user
+
 # --- TEIL 1: WETTERDATEN HOLEN & STATISTIK ERSTELLEN ---
-def generate_weather_master(plz, start_year=2019, end_year=2024):
-    # 1. Ordner erstellen
+def generate_weather_master(lat, lon, plz, start_year=2019, end_year=2024):
+    
+    # erstellt, wenn nicht vorhanden Ordner solar_base
     output_dir = "solar_base"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         print(f"Ordner '{output_dir}' erstellt.")
 
-    # 2. Koordinaten abrufen
-    geo_url = f"http://api.zippopotam.us/de/{plz}"
-    
-    try:
-        geo_res = requests.get(geo_url)
-        if geo_res.status_code == 200:
-            loc = geo_res.json()['places'][0]
-            lat, lon = float(loc['latitude']), float(loc['longitude'])
-            if not (47 < lat < 55): lat, lon = 51.05, 13.74
-        print(f"Koordinaten für {plz}: {lat}, {lon}")
-    except:
-        print("Nutze Fallback-Koordinaten.")
+    filename = f"solar_base_{plz}_{start_year}_{end_year}.csv"
+    file_path = os.path.join(output_dir, filename)
+    if os.path.exists(file_path):
+        print(f"--- INFO: Datei {filename} existiert bereits. Daten werden nicht neu berechnet. ---")
+        return pd.read_csv(file_path)
 
     all_data_frames = []
 
@@ -84,15 +81,14 @@ def generate_weather_master(plz, start_year=2019, end_year=2024):
     master_df = master_df.reset_index().sort_values('mm_dd_hh')
 
     # 5. Speichern
-    filename = os.path.join(output_dir, f"solar_base_{plz}.csv")
-    master_df.to_csv(filename, index=False)
+    #filename = os.path.join(output_dir, f"solar_base_{plz}_{start_year}_{end_year}.csv")
+    master_df.to_csv(file_path, index=False)
     
     print("-" * 30)
-    print(f"FERTIG! Datei gespeichert: {filename}")
+    print(f"FERTIG! Datei gespeichert: {file_path}")
     print(f"Spalten: {', '.join(master_df.columns.tolist())}")
     return master_df
 
 # --- START ---
-plz = "01067"
-#plz = "01445"
-weather_data = generate_weather_master(plz, start_year=2020, end_year=2025)
+lat, lon, plz = get_coordinates_from_user('user.json')
+weather_data = generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025)

@@ -47,5 +47,30 @@ def update_config_from_api(json_file):
     except Exception as e:
         print(f"Ein Fehler ist aufgetreten: {e}")
 
+
+def get_coordinates_from_user(json_file='user.json'):
+    try:
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+        
+        # Zugriff über die verschachtelten Schlüssel
+        lat = data['general_info']['coordinates']['latitude']
+        lon = data['general_info']['coordinates']['longitude']
+        plz = data['general_info']['postal_code']
+        
+        # Prüfung, ob die Werte schon gesetzt wurden (nicht null sind)
+        if lat is None or lon is None:
+            print("Warnung: Koordinaten sind noch nicht in der JSON gesetzt!")
+            return None, None, None
+            
+        return lat, lon, plz
+
+    except FileNotFoundError:
+        print(f"Fehler: Die Datei {json_file} wurde nicht gefunden.")
+    except KeyError as e:
+        print(f"Fehler: Der Schlüssel {e} fehlt in der JSON-Struktur.")
+    
+    return None, None, None
+
 # Anwendung
-update_config_from_api('user.json')
+#update_config_from_api('user.json')
