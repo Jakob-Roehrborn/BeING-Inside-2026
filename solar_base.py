@@ -11,7 +11,9 @@ import os
 from user_json import get_coordinates_from_user, update_config_from_api
 
 # --- TEIL 1: WETTERDATEN HOLEN & STATISTIK ERSTELLEN ---
-def generate_weather_master(lat, lon, plz, start_year=2019, end_year=2024):
+def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
+
+    #lat, lon, plz = get_coordinates_from_user('user.json')
     
     # erstellt, wenn nicht vorhanden Ordner solar_base
     output_dir = "solar_base"
@@ -91,5 +93,5 @@ def generate_weather_master(lat, lon, plz, start_year=2019, end_year=2024):
 
 # --- START ---
 #update_config_from_api('user.json')
-lat, lon, plz = get_coordinates_from_user('user.json')
-weather_data = generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025)
+# lat, lon, plz = get_coordinates_from_user('user.json')
+# weather_data = generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025)

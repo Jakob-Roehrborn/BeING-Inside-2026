@@ -13,7 +13,7 @@ def get_json_value(keys, json_file='user.json'):
     try:
         with open(json_file, 'r') as f:
             current = json.load(f)
-            
+
         for key in keys:
             current = current[key]
         return current
@@ -29,25 +29,27 @@ def geolocate(plz):
     return location.latitude, location.longitude
 
 def update_config_from_api(json_file):
-    # 1. JSON laden
+
     with open(json_file, 'r') as f:
         data = json.load(f)
     
-    plz = data['general_info']['postal_code']
+    if (plz := data['general_info']['postal_code']):
     
-    geolocator = Nominatim(user_agent="plz_koordinaten")
+        geolocator = Nominatim(user_agent="plz_koordinaten")
 
-    location = geolocator.geocode(plz) # als String!!!
-                 
-    # Daten in der JSON aktualisieren
-    data['general_info']['coordinates']['latitude'] = location.latitude
-    data['general_info']['coordinates']['longitude'] = location.longitude
-    data['metadata']['last_updated'] = datetime.now().strftime('%Y-%m-%d')
+        location = geolocator.geocode(plz) # als String!!!
+                    
+        # Daten in der JSON aktualisieren
+        data['general_info']['coordinates']['latitude'] = location.latitude
+        data['general_info']['coordinates']['longitude'] = location.longitude
+        data['metadata']['last_updated'] = datetime.now().strftime('%Y-%m-%d')
 
-    print(f'Koordinaten für {plz}: Latitude {location.latitude}, Longitude {location.longitude} ')
-                
-    with open(json_file, 'w') as f:
-        json.dump(data, f, indent=4)
+        print(f'Koordinaten für {plz}: Latitude {location.latitude}, Longitude {location.longitude} ')
+                    
+        with open(json_file, 'w') as f:
+            json.dump(data, f, indent=4)
+    else:
+        print('update_config_from_api: plz fehlt!')
 
 
 def get_coordinates_from_user(json_file='user.json'):
@@ -83,14 +85,8 @@ def get_solar_from_user(json_file='user.json'):
         azimuth = data['solar_system']['azimuth']
         tilt = data['solar_system']['tilt']
         capacity_kwp = data['solar_system']['capacity_kwp']
-        area_sqm = data['solar_system']['area_sqm']
-        
-        # Prüfung, ob die Werte schon gesetzt wurden (nicht null sind)
-        if azimuth is None or tilt is None or capacity_kwp is None or area_sqm is None:
-            print("Warnung: Koordinaten sind noch nicht vollständig in der JSON gesetzt!")
-            return None, None, None
             
-        return azimuth, tilt, capacity_kwp, area_sqm
+        return azimuth, tilt, capacity_kwp
 
     except FileNotFoundError:
         print(f"Fehler: Die Datei {json_file} wurde nicht gefunden.")

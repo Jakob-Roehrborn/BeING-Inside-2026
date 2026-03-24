@@ -62,6 +62,18 @@ def performance_kw(df, monat, tag, stunde, kwp_anlage):
         return (strahlung / 1000) * kwp_anlage
     return 0.0
 
+def add_performance_column(df, kwp_anlage):
+    """
+    Berechnet die Leistung und gibt nur Zeitstempel und Performance zurück.
+    """
+
+    df_result = df.copy()
+    df_result['solar'] = (df_result['leistung_geneigt'] / 1000) * kwp_anlage
+
+    # Nur die gewünschten Spalten - doppelte Klammer [[...]] gibt ein DataFrame zurück
+    df_reduced = df_result[['solar']] #'mm_dd_hh',
+    
+    return df_reduced
 
 def performance_range_sum(df, start_str, end_str, capacity_kwp):
     """
@@ -92,36 +104,43 @@ def performance_range_sum(df, start_str, end_str, capacity_kwp):
         
     return total_kwh
 
-def time_range(start_str, end_str):
+def time_range(ergebnis_df, start_str, end_str, capacity_kwp):
         ergebnis = performance_range_sum(ergebnis_df, start_str, end_str, capacity_kwp)
         print(f"Produzierter Strom im Zeitraum {start_str} - {end_str}: {ergebnis:.2f} kWh")
 
+
+def main_kwp_performance(lat, lon, plz):
+    csv_path = os.path.join("solar_base", f"solar_base_{plz}_2020_2025.csv")
+    azimuth, tilt, capacity_kwp = get_solar_from_user('user.json')
+    ergebnis_df = calculate_tilted_irradiance(csv_path, tilt, azimuth, lat, lon, scenario='mean')
+    return add_performance_column(ergebnis_df, capacity_kwp)
+
 # JSON-Daten
-lat, lon, plz = get_coordinates_from_user('user.json')
-azimuth, tilt, capacity_kwp, area_sqm = get_solar_from_user('user.json')
+# lat, lon, plz = get_coordinates_from_user('user.json')
+# azimuth, tilt, capacity_kwp = get_solar_from_user('user.json')
 
-# Pfad zur Master-Wetterdatei im solar_base Ordner
-data = os.path.join("solar_base", f"solar_base_{plz}_2020_2025.csv")
+# # Pfad zur Master-Wetterdatei im solar_base Ordner
+# data = os.path.join("solar_base", f"solar_base_{plz}_2020_2025.csv")
 
-WAHL = 'mean' # SZENARIO: 'mean', 'min' oder 'max'
+# WAHL = 'mean' # SZENARIO: 'mean', 'min' oder 'max'
 
-try:
-    # Berechnung mit dem gewählten Szenario
-    ergebnis_df = calculate_tilted_irradiance(data, azimuth, tilt, lat, lon, scenario=WAHL)
+# try:
+#     # Berechnung mit dem gewählten Szenario
+#     ergebnis_df = calculate_tilted_irradiance(data, azimuth, tilt, lat, lon, scenario=WAHL)
 
-    if capacity_kwp is not None:
-        print(f"\n--- BERECHNUNG FÜR SZENARIO: {WAHL.upper()} ---")
-        print(f"Jahresertrag ({capacity_kwp} kWp): {(ergebnis_df['leistung_geneigt'].sum() / 1000 * capacity_kwp):,.2f} kWh")
+#     if capacity_kwp is not None:
+#         print(f"\n--- BERECHNUNG FÜR SZENARIO: {WAHL.upper()} ---")
+#         print(f"Jahresertrag ({capacity_kwp} kWp): {(ergebnis_df['leistung_geneigt'].sum() / 1000 * capacity_kwp):,.2f} kWh")
 
-        # Beispielabfrage 02.03. 12:00
-        p_kw = performance_kw(ergebnis_df, 3, 2, 12, capacity_kwp)
-        print(f"Leistung am 02.03. 12:00: {p_kw:.2f} kW")
+#         # Beispielabfrage 02.03. 12:00
+#         p_kw = performance_kw(ergebnis_df, 3, 2, 12, capacity_kwp)
+#         print(f"Leistung am 02.03. 12:00: {p_kw:.2f} kW")
 
-        start_str = "01-01 00:00"
-        end_str = "12-31 23:00" #mm-dd
-        time_range(start_str, end_str)
+#         start_str = "01-01 00:00"
+#         end_str = "12-31 23:00" #mm-dd
+#         time_range(start_str, end_str)
 
-except Exception as e:
-    print(f"Fehler: {e}")
-    import traceback
-    traceback.print_exc()
+# except Exception as e:
+#     print(f"Fehler: {e}")
+#     import traceback
+#     traceback.print_exc()
