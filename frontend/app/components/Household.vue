@@ -11,7 +11,7 @@
                         Geschätzter Jahresstromverbrauch
                     </label>
                     <div class="relative rounded-md shadow-sm">
-                        <input type="number" id="consumption" v-model="model"
+                        <input type="number" id="consumption" v-model="model.consumption"
                             placeholder="z.B. 4500"
                             class="block w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition duration-150 text-lg" />
                         <div
@@ -22,15 +22,24 @@
                 </div>
                 <div></div>
             </div>
+
+            <UtilPersonSlider v-model="people"/>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import type { Household } from '~/types/inputData';
-
+import UtilPersonSlider from './Utils/UtilPersonSlider.vue';
 
 const model = defineModel<Household>({required: true})
+
+const people = ref(2)
+
+watch(people, () => {
+    const CONSUMPTION = [1500, 2500, 3200, 4000, 5000] 
+    model.value.consumption = CONSUMPTION[people.value]!
+})
 
 </script>
 

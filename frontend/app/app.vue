@@ -28,20 +28,20 @@ const isLoading = ref(false);
 const results = ref(null);
 
 const inData = ref<inputData>({
-    pv: {
+    household: {
+
+    },
+    battery: {
         present: false
     },
     ev: {
         present: false
     },
-    battery: {
+    pv: {
         present: false
     },
     heat_pump: {
         present: false
-    },
-    household: {
-        people: 3
     }
 })
 const outData = ref<outputData | undefined>()

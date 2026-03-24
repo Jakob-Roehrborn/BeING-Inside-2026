@@ -36,25 +36,11 @@
                             class="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
                         <span class="text-base text-slate-800">Ich habe einen <strong>Batteriespeicher</strong></span>
                     </label>
-                </div>
-
-                <div class="form-group bg-slate-50 p-6 rounded-xl border border-slate-100">
-                    <label for="shiftable"
-                        class="block text-base font-semibold text-slate-800 mb-3 flex justify-between items-center">
-                        Verschiebbarer Jahresverbrauch
-                        <span class="text-3xl font-bold text-blue-600">{{ formData.shiftablePercentage }}%</span>
-                    </label>
-                    <input type="range" id="shiftable" v-model="formData.shiftablePercentage" min="0" max="100"
-                        class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" />
-                    <p class="mt-3 text-sm text-slate-600 leading-relaxed">
-                        Schätzen Sie, wie viel Prozent Ihres Gesamtverbrauchs Sie gezielt in günstige Zeiten (z.B.
-                        Nachts, Mittags bei Sonne) verlegen können (Laden, Heizen, Waschen).
-                    </p>
                 </div> -->
             </div>
 
             <button
-                class="w-full flex justify-center items-center gap-2 py-4 px-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed text-lg"
+                class="w-full flex justify-center items-center gap-2 py-4 px-6 bg-sachsenrot text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed text-lg"
                 @click="submit" :disabled="props.isLoading">
                 <svg v-if="props.isLoading" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
                     fill="none" viewBox="0 0 24 24">

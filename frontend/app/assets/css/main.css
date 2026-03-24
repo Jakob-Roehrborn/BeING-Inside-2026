@@ -2,7 +2,7 @@
 
 @import "tailwindcss";
 
-/* 
+
 @layer components {
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -13,9 +13,9 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
     appearance: textfield;
-}} */
+}}
 
 
 @theme {
-    --sachsenrot: rgb(d50037);
+    --color-sachsenrot: #d50037;
 }

@@ -3,13 +3,13 @@
         <label class="flex items-center gap-2 cursor-pointer">
             <span>Ja</span>
             <input type="checkbox" :value="false" v-model="yesSelected"
-                class="size-4 cursor-pointer accent-blue-600 align-middle">
+                class="size-4 cursor-pointer accent-sachsenrot align-middle">
         </label>
 
         <label class="flex items-center gap-2 cursor-pointer">
             <span>Nein</span>
             <input type="checkbox" :value="true" v-model="noSelected"
-                class="size-4 cursor-pointer accent-blue-600 align-middle">
+                class="size-4 cursor-pointer accent-sachsenrot align-middle">
         </label>
     </div>
 </template>

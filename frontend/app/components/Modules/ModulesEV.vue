@@ -17,17 +17,6 @@
         <div class="flex justify-between">
             <div>
                 <label for="consumption" class="block text-sm font-medium text-slate-700 mb-1">
-                    typischer Ladezeitpunkt
-                </label>
-                <div class="relative rounded-md shadow-sm">
-                    <input type="number" v-model="model.charging_time" placeholder="00:00"
-                        class="block w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition duration-150 text-lg" />
-                </div>
-            </div>
-        </div>
-        <div class="flex justify-between">
-            <div>
-                <label for="consumption" class="block text-sm font-medium text-slate-700 mb-1">
                     Leistung der Ladeeinrichtung
                 </label>
                 <div class="relative rounded-md shadow-sm">
