@@ -1,19 +1,19 @@
 from machine import Pin, ADC
-import time
 import network
-'''PIN_solar = Pin(16, Pin.OUT)
-PIN_speicher = Pin(17, Pin.OUT)
-PIN_waermepumpe = Pin(18, Pin.OUT)'''
+import urequests
+import time
 
+
+#------------------------Logic-----------------------
+#Module = [PV,EV,WP,Batterie]
 pin_auto = Pin(15, Pin.IN, Pin.PULL_UP)
 pin_solar = ADC(Pin(26))
 pin_speicher = ADC(Pin(27))
 pin_waermepumpe = ADC(Pin(28))
 
-#Module = [PV,EV,WP,Batterie]
-
-
-
+Pin(16, Pin.OUT).value(1)
+Pin(17, Pin.OUT).value(1)
+Pin(18, Pin.OUT).value(1)
 
 def module_check():
     modules_w=[0,0,0,0]
@@ -35,17 +35,37 @@ def module_check():
 
 
 def send(module,state):
-    print(module,state)
+    message = (module,state)
+    response = urequests.post('http://127.0.0.1:5000/module_change', data = {message})
+    print(response)
+
 
 def change_det(old,new):
     for i in range(4):
         if old[i] == new[i]: continue
-        else: send(i, new[i])
+        send(i, new[i])
+        time.sleep(0.5)
 
+#-------------------------Network-----------------------------
+ssid = 'vindictiveVi'
+password = 'getonthisshit' 
+def network_init():
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(ssid, password)
+    while not wlan.isconnected():
+            print("connecting")
+            time.sleep(0.1)
+    print("con successfull")
 
+#--------------------------Main-------------------------------
 
 def main():
     modules=[0,0,0,0]
+    network_init()
+    message=(1,2)
+    response = urequests.post('http://127.0.0.1:5000/module_change', data = {message})
+    print(response)
     while True:
         modules_old= modules.copy()
         modules= module_check()
