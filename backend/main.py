@@ -11,6 +11,7 @@ from Speicher_1 import speicher
 import user_json_new as js
 from eauto2 import simuliere_e_auto_mit_soc
 from kosten_calc import berechne_stromkosten_nach_14a
+from data_class import output_data
 
 def main_backend():
 
@@ -104,7 +105,11 @@ def main_backend():
     berechne_stromkosten_nach_14a(df)
     df.to_csv("test_df.csv", index=False)
    
-    return (df["netz_einspeisung"]).sum(), (df["netz_bezug"]).sum(), (df['ges_price']).sum()
+    return output_data( # muss noch angepasst werden 
+        netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),
+        netz_bezug_kwh = (df["netz_bezug"]).sum(),
+        gesamtkosten_euro = (df['ges_price']).sum()
+    ) 
 
 # prüft ob Wetterdaten für eine plz bereits vorhanden ist
 def weather_cvs_exists(plz):

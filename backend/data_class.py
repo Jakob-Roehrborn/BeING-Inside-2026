@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+# ---- input Data ----
+
 @dataclass
 class Coordinates:
     latitude: float
@@ -66,3 +68,11 @@ def input_to_class(data: dict) -> input_data:
         memory = Memory(**data["memory"]),
         metadata = Metadata(**data["metadata"])
     )
+
+# ----- output Data -----
+
+@dataclass
+class output_data:
+    netz_einspeisung_kwh: float
+    netz_bezug_kwh: float
+    gesamtkosten_euro: float
