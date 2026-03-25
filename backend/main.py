@@ -1,5 +1,5 @@
 from solar_base import generate_weather_master
-from solar_calculation import main_kwp_performance
+from backend.solar_calculation import main_kwp_performance
 from heat_pump import heat_pump
 from eauto import optimierte_ladesimulation
 from haushalt_csv import household
