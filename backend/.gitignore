@@ -1,0 +1,6 @@
+*.png
+*.csv
+*.parquet
+*.pyc
+
+.venv/
