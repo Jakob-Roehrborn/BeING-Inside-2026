@@ -1,7 +1,12 @@
 /* assets/css/main.css */
 
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 @import "tailwindcss";
 
+
+@theme {
+    --font-title: "Michroma", sans-serif;
+}
 
 @layer components {
 

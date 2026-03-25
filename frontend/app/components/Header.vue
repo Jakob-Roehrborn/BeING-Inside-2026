@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="font-title">
         <div class="flex flex-row items-center w-full justify-center gap-3">
             <div class="text-sachsenrot text-6xl font-extrabold">Dynamisch</div>
-            <div class="my-3 text-4xl font-semibold tracking-wide">
+            <div class="my-3 text-2xl font-semibold tracking-wide text-left pt-2.5">
                 <div>im Leben</div>
                 <div>im Strom</div>
             </div>
@@ -22,4 +22,5 @@
 
 <script lang="ts" setup></script>
 
-<style></style>
+<style>
+</style>
