@@ -1,16 +1,16 @@
 {
     "general_info": {
-        "postal_code": "01097",
+        "postal_code": "01099",
         "city": "wird nicht meher ermittelt",
         "coordinates": {
-            "latitude": 51.0694225,
-            "longitude": 13.7378484
+            "latitude": 51.0914296,
+            "longitude": 13.8272693
         },
         "number_of_person": 4,
-        "total_consumption": 3000
+        "total_consumption": 7900
     },
     "solar_system": {
-        "exist": true,
+        "exist": false,
         "azimuth": 180,
         "tilt": 35,
         "capacity_kwp": 10.0,
@@ -18,18 +18,20 @@
     },
     "heat_pump": {
         "exist": true,
-        "performance_kWh_year": 1200
+        "performance_kWh_year": 3000
     },
     "ecar": {
         "exist": true,
         "ziel_jahreskilometer": 15000,
         "verbrauch_kwh_pro_100km": 18.0,
-        "max_leistung_kw": 2.7
+        "max_leistung_kw": 2.7,
+        "wallbox": true
     },
     "memory": {
-        "exist": false
+        "exist": true,
+        "capacity_kWh": 10.0
     },
     "metadata": {
-        "last_updated": "2026-03-24"
+        "last_updated": "2026-03-25"
     }
 }

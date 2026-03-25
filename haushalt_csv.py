@@ -3,7 +3,7 @@
 
 import pandas as pd
 
-def household(ziel_jahresverbrauch_kwh = 3000):
+def household():
     input_file = r'material\synPRO_el_family.dat'
     df = pd.read_csv(input_file, sep=';', comment='#')
     df['datetime'] = pd.to_datetime(df['unixtimestamp'], unit='s')
@@ -17,15 +17,13 @@ def household(ziel_jahresverbrauch_kwh = 3000):
 
     ist_jahresverbrauch_wh = hourly_df['P_el_Wh'].sum()
 
-    ziel_jahresverbrauch_wh = ziel_jahresverbrauch_kwh * 1000
     norm_df = hourly_df[['datetime']].copy()
     anteil = hourly_df['P_el_Wh'] / ist_jahresverbrauch_wh
     norm_df['P_el_anteil_gesamt'] = anteil.round(7)
-    norm_df['P_el_normiert_kWh'] = (anteil * ziel_jahresverbrauch_wh).round(2)
     #norm_df['P_el_pro_person_normiert_Wh'] = (norm_df['P_el_normiert_Wh'] / personen_anzahl).round(2)
 
     #norm_df.to_csv('Household.csv', index=False)
-    return norm_df[['P_el_normiert_kWh']]
+    return norm_df[['P_el_anteil_gesamt']]
 
     # norm_df.to_csv(output_file_normiert, index=False)
     # print(f"-> 2. Normierte Tabelle (skaliert auf {ziel_jahresverbrauch_kwh} kWh) erfolgreich erstellt!")

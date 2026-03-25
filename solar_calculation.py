@@ -55,13 +55,13 @@ def performance_kw(df, monat, tag, stunde, kwp_anlage):
         return (strahlung / 1000) * kwp_anlage
     return 0.0
 
-def add_performance_column(df, kwp_anlage):
+def add_performance_column(df, kwp_anlage, efficiency = 0.85):
     """
     Berechnet die Leistung und gibt nur Zeitstempel und Performance zurück.
     """
 
     df_result = df.copy()
-    df_result['solar'] = (df_result['leistung_geneigt'] / 1000) * kwp_anlage
+    df_result['solar'] = (df_result['leistung_geneigt'] / 1000) * kwp_anlage * efficiency
 
     # Nur die gewünschten Spalten - doppelte Klammer [[...]] gibt ein DataFrame zurück
     df_reduced = df_result[['solar']] #'mm_dd_hh',

@@ -37,6 +37,7 @@ class ECar:
 @dataclass
 class Memory:
     exist: bool
+    capacity_kWh: float
 
 @dataclass
 class Metadata:
