@@ -7,6 +7,7 @@ from Speicher_1 import speicher
 
 import pandas as pd
 import user_json_new as js
+import os
 
 import matplotlib.pyplot as plt
 
@@ -114,6 +115,14 @@ def main_backend():
     df.to_csv("test_df.csv", index=False)
    
     return (df["netz_einspeisung"]).sum(), (df["netz_bezug"]).sum(), (df['ges_price']).sum()
+
+# prüft ob Wetterdaten für eine plz bereits vorhanden ist
+def weather_cvs_exists(plz):
+    filename = f"solar_base_{plz}_2020_2025.csv"
+    file_path = os.path.join('solar_base', filename)
+    if os.path.exists(file_path):
+        return True
+    return False
 
 if __name__ == "__main__":
     main_backend()
