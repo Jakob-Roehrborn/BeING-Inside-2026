@@ -1,5 +1,5 @@
 import pandas as pd
-from user_json import get_json_value
+from not_use.user_json import get_json_value
 
 def load_data(csv_path, cols, separator=','):
     # 'sep' gibt an, welches Trennzeichen genutzt wird

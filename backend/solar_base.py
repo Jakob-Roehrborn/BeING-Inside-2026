@@ -35,7 +35,7 @@ def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
             "longitude": lon,
             "start_date": f"{year}-01-01",
             "end_date": f"{year}-12-31",
-            "hourly": "shortwave_radiation,diffuse_radiation,direct_normal_irradiance",
+            "hourly": "shortwave_radiation,diffuse_radiation,direct_normal_irradiance,temperature_2m",
             "timezone": "UTC" # UTC verhindert DST-Probleme (Sommerzeit)
         }
         
@@ -48,7 +48,8 @@ def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
                     'time': pd.to_datetime(h.get('time')),
                     'ghi': h.get('shortwave_radiation'),
                     'dhi': h.get('diffuse_radiation'),
-                    'dni': h.get('direct_normal_irradiance')
+                    'dni': h.get('direct_normal_irradiance'),
+                    'temp': h.get('temperature_2m')
                 })
         
                 df = df[~((df['time'].dt.month == 2) & (df['time'].dt.day == 29))] # ohne Schaltjahre
@@ -70,7 +71,8 @@ def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
     master_df = full_df.groupby('mm_dd_hh').agg({ # Gruppierung
         'ghi': ['mean', 'min', 'max'],
         'dhi': ['mean', 'min', 'max'],
-        'dni': ['mean', 'min', 'max']
+        'dni': ['mean', 'min', 'max'],
+        'temp': ['mean']
     })
 
     master_df.columns = [f"{col[0]}_{col[1]}" for col in master_df.columns.values]

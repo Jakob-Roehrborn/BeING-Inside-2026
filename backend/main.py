@@ -8,6 +8,9 @@ from Speicher_1 import speicher
 import pandas as pd
 import user_json_new as js
 
+import matplotlib.pyplot as plt
+
+
 def main_backend():
 
     def timestamp():
@@ -102,13 +105,14 @@ def main_backend():
     df["ges_price"] =- df_prices[cols[0]]*df["netz_bezug"]/100+0.0778*df['netz_einspeisung']
 
     print('Haushalt:', (df["household"]).sum())
+    print('Solar:', (df["solar"]).sum())
     print('Netzeinspeisung:', (df["netz_einspeisung"]).sum())
     print('Netzbezug:', (df["netz_bezug"]).sum())
     print('Gesamtpreis:', (df['ges_price']).sum())
     print('Gesamtverbrauch:', df['total_consumption'].min())
     
     df.to_csv("test_df.csv", index=False)
-
+   
     return (df["netz_einspeisung"]).sum(), (df["netz_bezug"]).sum(), (df['ges_price']).sum()
 
 if __name__ == "__main__":

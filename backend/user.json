@@ -10,7 +10,7 @@
         "total_consumption": 7900
     },
     "solar_system": {
-        "exist": false,
+        "exist": true,
         "azimuth": 180,
         "tilt": 35,
         "capacity_kwp": 10.0,
