@@ -51,7 +51,7 @@ def main_backend():
         ladeleistung = 11 if input_user.ecar.wallbox else 2.7
         df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit)
         
-    df['household'] = household(smart = False)*household_con_tot
+    df['household'] = household(smart = input_user.general_info.smart)*household_con_tot
     df['total_consumption'] = (
         df['household'] + 
         df.get('heat_pump', 0) + 
@@ -86,15 +86,7 @@ def main_backend():
         # Wenn kein Speicher existiert, ist das Saldo direkt unser Netzbezug/Einspeisung
         # df.clip(lower=0) -> alle negativen Zahlen zu 0
         df['netz_bezug'] = df['saldo'].clip(lower=0) 
-        df['netz_einspeisung'] = df['saldo'].clip(upper=0).abs()
-
-    print('Haushalt:', (df["household"]).sum())
-    print('Solar:', (df["solar"]).sum())
-    print('Netzeinspeisung:', (df["netz_einspeisung"]).sum())
-    print('Netzbezug:', (df["netz_bezug"]).sum())
-    print('Gesamtpreis:', (df['ges_price']).sum())
-    print('Gesamtverbrauch:', df['total_consumption'].min())
-    
+        df['netz_einspeisung'] = df['saldo'].clip(upper=0).abs()    
 
     # KWhJahr * Hausverbrauch + ele_car 
     csv_path = "material\strompreise_2026_sachsenenergie.csv"
@@ -104,6 +96,13 @@ def main_backend():
 
     berechne_stromkosten_nach_14a(df)
     df.to_csv("test_df.csv", index=False)
+
+    print('Haushalt:', (df["household"]).sum())
+    print('Solar:', (df["solar"]).sum())
+    print('Netzeinspeisung:', (df["netz_einspeisung"]).sum())
+    print('Netzbezug:', (df["netz_bezug"]).sum())
+    print('Gesamtpreis:', (df['ges_price']).sum())
+    print('Gesamtverbrauch:', df['total_consumption'].min())
    
     return output_data( # muss noch angepasst werden 
         netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),

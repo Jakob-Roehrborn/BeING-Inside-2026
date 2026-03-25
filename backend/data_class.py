@@ -15,6 +15,7 @@ class GeneralInfo:
     number_of_person: int
     total_consumption: int
     eprice: float
+    smart: bool
 
 
 @dataclass
