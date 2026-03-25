@@ -1,6 +1,6 @@
 <template>
     <ModulesBase title="Haben Sie einen Batteriespeicher?" v-model="model">
-        <UtilsInput v-model="model.capacity" title="Speicherkapazität" placeholder="10" unit="kWh"/>
+        <UtilsInput v-model="model.capacity" title="Speicherkapazität" placeholder="10" unit="kWh" :required="true"/>
     </ModulesBase>
 </template>
 

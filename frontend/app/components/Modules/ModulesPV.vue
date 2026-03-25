@@ -1,6 +1,6 @@
 <template>
     <ModulesBase title="Haben Sie eine PV-Anlage?" v-model="model">
-        <UtilsInput v-model="model.power" title="installierte Leistung" placeholder="10" , unit="kWp" />
+        <UtilsInput v-model="model.power" title="installierte Leistung" placeholder="10" , unit="kWp" :required="true"/>
 
         <div class="flex flex-row justify-between gap-8">
             <UtilsInput v-model="model.angle" title="Dachneigung" placeholder="30" , unit="°" class="w-2/3" />

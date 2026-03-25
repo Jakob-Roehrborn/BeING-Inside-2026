@@ -1,11 +1,11 @@
 <template>
     <div>
-        <UtilsInput v-model="model.zip_code" title="PLZ" />
+        <UtilsInput v-model="model.zip_code" title="PLZ" :required="true" />
 
         <div class="my-6"/>
 
         <div class="flex flex-col items-center gap-4 bg-slate-50 p-4 rounded-xl">
-            <UtilsInput v-model="model.consumption" title="Geschätzter Jahresstromverbrauch" placeholder="4500" unit="kWh/Jahr"
+            <UtilsInput v-model="model.consumption" title="Geschätzter Jahresstromverbrauch" placeholder="4500" unit="kWh/Jahr" :required="true"
             class="w-full"/> 
             <UtilPersonSlider class="w-full" v-model="people"/>
         </div>

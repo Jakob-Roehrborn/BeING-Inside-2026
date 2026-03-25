@@ -1,6 +1,6 @@
 <template>
     <ModulesBase title="Haben Sie ein Elektroauto?" v-model="model">
-        <UtilsInput v-model="model.milage" title="jährliche Fahrstrecke" placeholder="15.500" unit="km"/>
+        <UtilsInput v-model="model.milage" title="jährliche Fahrstrecke" placeholder="15.500" unit="km" :required="true"/>
         <div class="flex flex-row justify-between">
             <div class="font-semibold">Benutzen Sie eine Wallbox zum Laden ihres Elektroautos?</div>
             <input v-model="model.has_wall_box" type="checkbox" class="mr-2 size-6 accent-sachsenrot">

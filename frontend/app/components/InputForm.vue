@@ -1,8 +1,14 @@
 <template>
     <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100">
-        <h2 class="text-2xl font-semibold text-slate-900 flex items-center gap-2 border-b-2 border-slate-100 pb-3 mb-6">
-            Ihre aktuellen Stromdaten
-        </h2>
+        <div class="flex flex-row justify-between border-b-2 border-slate-100 pb-3 mb-6 items-end">
+            <h2 class="text-2xl font-semibold text-slate-900 w-2/3">
+                Ihre aktuellen Stromdaten
+            </h2>
+            <div class="flex flex-row justify-end w-1/3 text-sm">
+                <span class="text-red-500 ml-1 font-bold">*</span>
+                <span class="pl-1">Pflichtfeld</span>
+            </div>
+        </div>
 
         <Household v-model="data.household" />
 
@@ -19,7 +25,7 @@
         <ModulesHeatPump v-model="data.heat_pump" />
         <ModulesBattery v-model="data.battery" />
 
-        <div class="my-16"/>
+        <div class="my-16" />
 
         <UtilsSubmitButton @submit="submit" :is-loading="isLoading" />
     </div>
