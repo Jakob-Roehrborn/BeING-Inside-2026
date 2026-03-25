@@ -2,7 +2,6 @@ import pandas as pd
 import pvlib
 import numpy as np
 import os
-from backend.plott import plot_data
 
 def calculate_tilted_irradiance(csv_path, tilt, azimuth, lat, lon, scenario='mean'):
     """
@@ -58,22 +57,13 @@ def performance_kw(df, monat, tag, stunde, kwp_anlage):
 
 def add_performance_column(df, kwp_anlage, efficiency = 0.85):
     """
-   efficiency des Wechselrichter & Kabel
+    Berechnet die Leistung und gibt nur Zeitstempel und Performance zurück.
     """
 
     df_result = df.copy()
-    gamma = -0.004  # Temperaturkoeffizient (-0,4% pro Grad Celsius)
-    t_ref = 25      # Referenztemperatur STC
-    temp_air = df_result['temp_mean'] if 'temp_mean' in df_result.columns else 15
-    t_cell = temp_air + (df_result['leistung_geneigt'] / 800) * 25 # Zelltemperatur schätzen (Ross-Modell)
-    temp_factor = 1 + gamma * (t_cell - t_ref)
+    df_result['solar'] = (df_result['leistung_geneigt'] / 1000) * kwp_anlage * efficiency
 
-    df_result['solar'] = (df_result['leistung_geneigt'] / 1000) * kwp_anlage * efficiency * temp_factor
-    df_result['solar2'] = (df_result['leistung_geneigt'] / 1000) * kwp_anlage * efficiency
-    plot_data(df_result, ['solar','solar2'], title='Solar Temperatureinfluss')
-    
-    df_result['solar'] = df_result['solar'].clip(lower=0) # keine negativen Werte
-
+    # Nur die gewünschten Spalten - doppelte Klammer [[...]] gibt ein DataFrame zurück
     df_reduced = df_result[['solar']] #'mm_dd_hh',
     
     return df_reduced
