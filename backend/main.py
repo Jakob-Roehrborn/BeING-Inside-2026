@@ -1,5 +1,5 @@
 from solar_base import generate_weather_master
-from backend.solar_calculation import main_kwp_performance
+from solar_calculation import main_kwp_performance
 from heat_pump import heat_pump
 from eauto import optimierte_ladesimulation
 from haushalt_csv import household
@@ -23,10 +23,10 @@ def main_backend():
         return formatted_timestamps
 
 
-    input_user = js.load_user_data('user.json')
+    input_user = js.load_user_data(r"backend\user.json")
 
     js.update_config_from_api(input_user) # setzt die Koordinaten basierend auf der plz
-    js.save_user_data(input_user, 'user.json') # speichert die Änderung
+    js.save_user_data(input_user, r"backend\user.json") # speichert die Änderung
 
     ecar_con = input_user.ecar.ziel_jahreskilometer * input_user.ecar.verbrauch_kwh_pro_100km /100
     heatpump_con = input_user.heat_pump.performance_kWh_year
@@ -34,7 +34,7 @@ def main_backend():
     df = pd.DataFrame()
     df['timestamp'] = timestamp()
 
-    df['household'] = household()*household_con_tot
+    df['household'] = household(smart=True)*household_con_tot
 
     if input_user.solar_system.exist:
         location_user = (input_user.general_info.coordinates.latitude, 
@@ -119,7 +119,7 @@ def main_backend():
 # prüft ob Wetterdaten für eine plz bereits vorhanden ist
 def weather_cvs_exists(plz):
     filename = f"solar_base_{plz}_2020_2025.csv"
-    file_path = os.path.join('solar_base', filename)
+    file_path = os.path.join(r'backend\solar_base', filename)
     if os.path.exists(file_path):
         return True
     return False

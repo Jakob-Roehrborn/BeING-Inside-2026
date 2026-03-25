@@ -3,11 +3,16 @@
 
 import pandas as pd
 
-def household():
-    input_file = r'material\synPRO_el_family.dat'
-    df = pd.read_csv(input_file, sep=';', comment='#')
-    df['datetime'] = pd.to_datetime(df['unixtimestamp'], unit='s')
-    df.set_index('datetime', inplace=True)
+def household(smart = False):
+    input_file = r'backend\material\hourly_el_family.csv' if smart else r'backend\material\household_smart_only.csv'
+    df = pd.read_csv(input_file, sep=',', comment='#')
+
+    if smart:
+        df['datetime'] = pd.to_datetime(df['timestamp'])
+        df.set_index('datetime', inplace=True)
+    else:
+        df['datetime'] = pd.to_datetime(df['unixtimestamp'], unit='s')
+        df.set_index('datetime', inplace=True)
 
     hourly_df = df['P_el'].resample('1h').mean().reset_index()
     hourly_df['P_el_Wh'] = hourly_df['P_el'].round(2)
