@@ -54,6 +54,6 @@ def plot_data(df, columns_to_plot, title="Energieanalyse",
 
 if __name__ == "__main__":
     # plot_energy_data(df, ['solar', 'heat_pump', 'ecar'], title="PV-Erzeugung vs. Verbraucher")
-    csv_path = r'backend\solar_base\solar_base_01099_2020_2025.csv'
+    csv_path = r'solar_base\solar_base_01099_2020_2025.csv'
     df = pd.read_csv(csv_path)
     plot_data(df, ['temp_mean'], moving_avg_days=2, show_hourly = False)

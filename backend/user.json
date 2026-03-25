@@ -1,13 +1,14 @@
 {
     "general_info": {
-        "postal_code": "01099",
+        "postal_code": "01098",
         "city": "wird nicht meher ermittelt",
         "coordinates": {
-            "latitude": 51.0914296,
-            "longitude": 13.8272693
+            "latitude": 42.4114854,
+            "longitude": -72.6937227
         },
         "number_of_person": 4,
-        "total_consumption": 7900
+        "total_consumption": 7900,
+        "eprice": 0.37
     },
     "solar_system": {
         "exist": true,
@@ -24,8 +25,9 @@
         "exist": true,
         "ziel_jahreskilometer": 15000,
         "verbrauch_kwh_pro_100km": 18.0,
-        "max_leistung_kw": 2.7,
-        "wallbox": true
+        "wallbox": true,
+        "start_ladezeit": 17,
+        "akku_grosse": 50
     },
     "memory": {
         "exist": true,

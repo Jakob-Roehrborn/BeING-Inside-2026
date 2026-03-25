@@ -4,8 +4,8 @@
 
 import pandas as pd
 
-def household_old(smart = False):   
-    input_file = r'material\household_smart.csv' if smart else r'material\household_normal.csv'
+def household(smart = False):   
+    input_file = r'material\household_smart.csv' if smart else r'material\hausehold_normal.csv'
     df = pd.read_csv(input_file, sep=',', comment='#')
     return df[['return_value']]
 
