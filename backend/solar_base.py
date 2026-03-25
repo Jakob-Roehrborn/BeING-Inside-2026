@@ -11,7 +11,7 @@ import os
 
 def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
 
-    output_dir = r"backend\solar_base"
+    output_dir = r"solar_base"
     if not os.path.exists(output_dir): # erstellt Ordner wenn nicht vorhanden
         os.makedirs(output_dir)
         print(f"Ordner '{output_dir}' erstellt.")

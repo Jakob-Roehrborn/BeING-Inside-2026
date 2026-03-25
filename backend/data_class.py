@@ -12,6 +12,8 @@ class GeneralInfo:
     coordinates: Coordinates
     number_of_person: int
     total_consumption: int
+    eprice: float
+
 
 @dataclass
 class SolarSystem:
@@ -31,8 +33,9 @@ class ECar:
     exist: bool
     ziel_jahreskilometer: int
     verbrauch_kwh_pro_100km: float
-    max_leistung_kw: float
     wallbox: bool
+    start_ladezeit : int
+    akku_grosse : int
 
 @dataclass
 class Memory:

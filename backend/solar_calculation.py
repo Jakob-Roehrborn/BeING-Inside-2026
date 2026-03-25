@@ -70,7 +70,7 @@ def performance_kw(df, monat, tag, stunde, kwp_anlage):
     return 0.0
 
 def main_kwp_performance(user):
-    csv_path = os.path.join("solar_base", f"solar_base_{user.general_info.postal_code}_2020_2025.csv")
+    csv_path = os.path.join(r"solar_base", f"solar_base_{user.general_info.postal_code}_2020_2025.csv")
   
     ergebnis_df = calculate_tilted_irradiance(csv_path, 
                                             user.solar_system.tilt,
