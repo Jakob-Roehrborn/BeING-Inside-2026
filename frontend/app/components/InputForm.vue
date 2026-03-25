@@ -1,57 +1,27 @@
 <template>
     <div class="bg-white p-8 rounded-2xl shadow-lg border border-slate-100">
-        <div class="space-y-10">
+        <h2 class="text-2xl font-semibold text-slate-900 flex items-center gap-2 border-b-2 border-slate-100 pb-3 mb-6">
+            Ihre aktuellen Stromdaten
+        </h2>
 
-            <Household v-model="data.household"/>
+        <Household v-model="data.household" />
 
-            <div>
-                <h2
-                    class="text-2xl font-semibold text-slate-900 flex items-center gap-2 border-b-2 border-slate-100 pb-3">
-                    <span class="text-blue-500 font-mono text-xl"></span>
-                    Weitere Angaben
-                </h2>
-                
+        <div class="my-12"/>
 
-                <ModulesPV v-model="data.pv"/>
-                <ModulesEV v-model="data.ev" class=""/>
-                <ModulesBattery v-model="data.battery"/>
-                <ModulesHeatPump v-model="data.heat_pump"/>
-               
-                <!-- <div class="space-y-3 mb-8">
-                    <label
-                        class="flex items-center gap-4 p-4 border rounded-xl border-slate-200 hover:bg-slate-50 cursor-pointer transition">
-                        <input type="checkbox" v-model="formData.hasEV"
-                            class="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-                        <span class="text-base text-slate-800">Ich besitze ein <strong>Elektroauto</strong></span>
-                    </label>
-                    <label
-                        class="flex items-center gap-4 p-4 border rounded-xl border-slate-200 hover:bg-slate-50 cursor-pointer transition">
-                        <input type="checkbox" v-model="formData.hasHeatPump"
-                            class="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-                        <span class="text-base text-slate-800">Ich nutze eine <strong>Wärmepumpe</strong></span>
-                    </label>
-                    <label
-                        class="flex items-center gap-4 p-4 border rounded-xl border-slate-200 hover:bg-slate-50 cursor-pointer transition">
-                        <input type="checkbox" v-model="data.battery"
-                            class="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-                        <span class="text-base text-slate-800">Ich habe einen <strong>Batteriespeicher</strong></span>
-                    </label>
-                </div> -->
-            </div>
+        <h2 class="text-2xl font-semibold text-slate-900 flex items-center gap-2 border-b-2 border-slate-100 pb-3">
+            <span class="text-blue-500 font-mono text-xl"></span>
+            Weitere Angaben
+        </h2>
 
-            <button
-                class="w-full flex justify-center items-center gap-2 py-4 px-6 bg-sachsenrot text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed text-lg"
-                @click="submit" :disabled="props.isLoading">
-                <svg v-if="props.isLoading" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
-                    fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                    </path>
-                </svg>
-                {{ props.isLoading ? 'Berechnung läuft...' : 'Einsparpotenzial berechnen' }}
-            </button>
-        </div>
+
+        <ModulesPV v-model="data.pv" />
+        <ModulesEV v-model="data.ev" class="" />
+        <ModulesHeatPump v-model="data.heat_pump" />
+        <ModulesBattery v-model="data.battery" />
+
+        <div class="my-16"/>
+
+        <UtilsSubmitButton @submit="submit" :is-loading="isLoading" />
     </div>
 </template>
 
@@ -67,13 +37,10 @@ const emit = defineEmits(['submit'])
 
 const data = defineModel<inputData>({ required: true })
 
-
 function submit() {
     emit("submit")
 }
 
 </script>
 
-<style>
-
-</style>
+<style></style>
