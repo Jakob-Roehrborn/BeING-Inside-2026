@@ -8,8 +8,6 @@ import pandas as pd
 import time
 import os
 
-from user_json import get_coordinates_from_user, update_config_from_api
-
 # --- TEIL 1: WETTERDATEN HOLEN & STATISTIK ERSTELLEN ---
 def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
 

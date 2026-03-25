@@ -1,9 +1,9 @@
 # Achtung mit kWh und Wh!!!
-# Personenanzahl wird aktuell nicht beachtet
+# Personenanzahl wird aktuell nicht beachtet - Frontend
 
 import pandas as pd
 
-def household(ziel_jahresverbrauch_kwh = 3000, personen_anzahl = 4):
+def household(ziel_jahresverbrauch_kwh = 3000):
     input_file = r'material\synPRO_el_family.dat'
     df = pd.read_csv(input_file, sep=';', comment='#')
     df['datetime'] = pd.to_datetime(df['unixtimestamp'], unit='s')

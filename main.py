@@ -1,11 +1,14 @@
-from user_json import update_config_from_api, get_json_value, get_coordinates_from_user, get_ecar_from_user
+#from user_json import update_config_from_api, get_json_value, get_coordinates_from_user, get_ecar_from_user
 from solar_base import generate_weather_master
 from solar_calculation import main_kwp_performance
 from heat_pump import heat_pump
 from eauto import optimierte_ladesimulation
 from haushalt_csv import household
 
+from data_class import input_to_class
+
 import pandas as pd
+import user_json_new as js
 
 def timestamp():
     start_date = "2025-01-01 00:00:00"
@@ -15,33 +18,43 @@ def timestamp():
     
     return formatted_timestamps
 
-update_config_from_api('user.json')
 
-lat, lon, plz = get_coordinates_from_user()
+input_user = js.load_user_data('user.json')
+
+js.update_config_from_api(input_user) # setzt die Koordinaten basierend auf der plz
+js.save_user_data(input_user, 'user.json') # speichert die Änderung
 
 df = pd.DataFrame()
 df['timestamp'] = timestamp()
 
-number_of_person = get_json_value(['general_info', "number_of_person"])
-total_consumption = get_json_value(['general_info', "total_consumption"])
-df['household'] = household(total_consumption, number_of_person)/1000
+df['household'] = household(input_user.general_info.total_consumption)/1000
 
-if get_json_value(["solar_system","exist"]):
-    generate_weather_master(lat, lon, plz)
-    df['solar'] = main_kwp_performance(lat, lon, plz) # df mit Spalten: mm_dd_hh, performance_kw 8760 Datenpunkte 
-    #solar_df.to_csv("test_solar.csv", index=False)
+if input_user.solar_system.exist:
+    location_user = (input_user.general_info.coordinates.latitude, 
+                     input_user.general_info.coordinates.longitude, 
+                     input_user.general_info.postal_code)
+    
+    generate_weather_master(*location_user)
+    df['solar'] = main_kwp_performance(input_user) # df mit Spalten: mm_dd_hh, performance_kw 8760 Datenpunkte 
 
-if get_json_value(["heat_pump","exist"]):
-    df['heat_pump'] = heat_pump()
-    #heat_pump = get_json_value(["heat_pump", "performance_kWh"]) * 33.714308790716046 /100
-    #heat_pump_df.to_csv("test_heat_pump.csv", index=False)
+if input_user.heat_pump.exist:
+    df['heat_pump'] = heat_pump(input_user.heat_pump.performance_kWh_year)
 
-if get_json_value(["ecar","exist"]):
-    resutlt = get_ecar_from_user('user.json')
-    df['ecar'] = optimierte_ladesimulation(*resutlt).values # .values -> ignoriert Index
+if input_user.ecar.exist:
+  
+    ladeleistung = 11 if input_user.ecar.wallbox else 2.7
+    df['ecar'] = optimierte_ladesimulation(
+        input_user.ecar.ziel_jahreskilometer,
+        input_user.ecar.verbrauch_kwh_pro_100km, 
+        ladeleistung).values # .values -> ignoriert Index
     
 df.to_csv("test_df.csv", index=False)
-if get_json_value(["memory","exist"]):
+
+if input_user.memory.exist:
     pass
 
 # KWhJahr * Hausverbrauch + ele_car 
+
+# kost konst 
+# kost dynamisch
+# diagramm 

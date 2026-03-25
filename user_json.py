@@ -1,8 +1,8 @@
 # Einträge in user.json ergänzen/ verändern 
 
 import json
-import requests
 from datetime import datetime
+from data_class import input_to_class
 
 from geopy.geocoders import Nominatim
 
@@ -99,15 +99,15 @@ def get_ecar_from_user(json_file='user.json'):
         
         ziel_jahreskilometer = data['ecar']['ziel_jahreskilometer']
         verbrauch_kwh_pro_100km = data['ecar']['verbrauch_kwh_pro_100km']
-        max_leistung_kw = data['ecar']['max_leistung_kw']
+        #max_leistung_kw = data['ecar']['max_leistung_kw']
             
-        return ziel_jahreskilometer, verbrauch_kwh_pro_100km, max_leistung_kw
+        return ziel_jahreskilometer, verbrauch_kwh_pro_100km #, max_leistung_kw
 
     except FileNotFoundError:
         print(f"Fehler: Die Datei {json_file} wurde nicht gefunden.")
     except KeyError as e:
         print(f"Fehler: Der Schlüssel {e} fehlt in der JSON-Struktur.")
     
-    return None, None, None
+    return None, None
 
 #update_config_from_api('user.json')

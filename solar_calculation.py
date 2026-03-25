@@ -3,8 +3,6 @@ import pvlib
 import numpy as np
 import os
 
-from user_json import get_solar_from_user
-
 def calculate_tilted_irradiance(csv_path, tilt, azimuth, lat, lon, scenario='mean'):
     """
     Berechnet die Einstrahlung auf einer geneigten Fläche.
@@ -104,11 +102,17 @@ def time_range(ergebnis_df, start_str, end_str, capacity_kwp):
         print(f"Produzierter Strom im Zeitraum {start_str} - {end_str}: {ergebnis:.2f} kWh")
 
 
-def main_kwp_performance(lat, lon, plz):
-    csv_path = os.path.join("solar_base", f"solar_base_{plz}_2020_2025.csv")
-    azimuth, tilt, capacity_kwp = get_solar_from_user('user.json')
-    ergebnis_df = calculate_tilted_irradiance(csv_path, tilt, azimuth, lat, lon, scenario='mean')
-    return add_performance_column(ergebnis_df, capacity_kwp)
+def main_kwp_performance(user):
+    csv_path = os.path.join("solar_base", f"solar_base_{user.general_info.postal_code}_2020_2025.csv")
+  
+    ergebnis_df = calculate_tilted_irradiance(csv_path, 
+                                            user.solar_system.tilt,
+                                            user.solar_system.azimuth, 
+                                            user.general_info.coordinates.latitude, 
+                                            user.general_info.coordinates.longitude,
+                                            scenario='mean')
+    
+    return add_performance_column(ergebnis_df, user.solar_system.capacity_kwp)
 
 # JSON-Daten
 # lat, lon, plz = get_coordinates_from_user('user.json')

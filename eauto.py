@@ -4,6 +4,8 @@ import random
 import matplotlib.pyplot as plt
 import time
 
+# max_leistung_kw mit Wallbox 11.0 ohne 2.7
+
 
 def optimierte_ladesimulation(
         ziel_jahreskilometer = 15000,
