@@ -1,25 +1,25 @@
 install:
-    just install-backend
-    just install-frontend
+    just install-be
+    just install-fe
 
-install-backend:
+install-be:
     cd backend && \
     python3 -m venv .venv && \
     . .venv/bin/activate && \
     pip install -r requirements.txt
 
-install-frontend:
+install-fe:
     cd frontend/ && \
     npm install
 
-run:
-    just run-frontend &
-    just run-backend
+dev:
+    just dev-be &
+    just dev-fe
 
-run-backend:
+dev-be:
     cd backend && \
     python3 -m flask run
 
-run-frontend:
+dev-fe:
     cd frontend && \
     npm run dev
