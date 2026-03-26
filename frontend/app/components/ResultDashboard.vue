@@ -74,6 +74,9 @@
                     class="border-indigo-400! border-2 " />
             </div>
 
+            <UtilsDrawer title="Detials">
+                <h1>TEST</h1>
+            </UtilsDrawer>
             <div class="my-3" />
 
             <!-- Sektion: EnWG Modul -->
@@ -90,6 +93,7 @@
             </div>
 
         </div>
+
 
         <!-- Leerer Zustand -->
         <div v-else
@@ -110,6 +114,7 @@
 <script lang="ts" setup>
 import type outputData from '~/types/outputData';
 import ResultWindow from './ResultWindow.vue';
+import UtilsDrawer from './Utils/UtilsDrawer.vue';
 
 const module_list = computed(() => {
     return [props.results!.cost_modul_1, props.results!.cost_modul_2, props.results!.cost_modul_3]

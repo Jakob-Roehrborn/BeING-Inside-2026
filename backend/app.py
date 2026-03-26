@@ -1,10 +1,11 @@
-from flask import Flask, jsonify, request, make_response, Response
+from flask import Flask, jsonify, request, make_response, Response, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from dataclasses import asdict
 from data_class import input_data
 from main import main_backend
 import user_json_new as js
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'WS-key'
@@ -57,6 +58,11 @@ def hit():
 
     return Response("<p>You've hit me </p>", status=200)
     
+DIAGRAMS_PATH = os.path.join(app.root_path, 'diagrams')
+
+@app.route('/api/diagrams/<path:filename>')
+def serve_diagrams(filename):
+    return send_from_directory(DIAGRAMS_PATH, filename)
 
 @app.route("/")
 def index():
