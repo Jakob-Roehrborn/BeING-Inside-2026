@@ -26,8 +26,9 @@ dev-fe:
 
 prod-be:
     cd backend && \
-    gunicorn -b 0.0.0.0:8000 app:app
+    gunicorn -b 127.0.0.1:8000 app:app
 
 prod-fe:
     cd frontend && \
-    npm run prod
+    npm run build && \
+    PORT=3000 HOST=127.0.0.1 node .output/server/index.mjs
