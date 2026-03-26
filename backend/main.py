@@ -9,11 +9,13 @@ from Speicher_1 import speicher
 #from ploten import plot_auswertung
 #from debugprint import debugprints
 import user_json_new as js
+
+from data_class import input_data
 from eauto2 import simuliere_e_auto_mit_soc
 from kosten_calc import berechne_stromkosten_nach_14a
 from data_class import output_data
 
-def main_backend():
+def main_backend(input_user: input_data):
 
     def timestamp():
         start_date = "2025-01-01 00:00:00"
@@ -24,7 +26,6 @@ def main_backend():
         return formatted_timestamps
 
 
-    input_user = js.load_user_data('user.json')
     js.update_config_from_api(input_user) # setzt die Koordinaten basierend auf der plz
     js.save_user_data(input_user, 'user.json') # speichert die Änderung
 
@@ -120,5 +121,5 @@ def weather_cvs_exists(plz):
     return False
 
 if __name__ == "__main__":
-    main_backend()
-
+    main_backend(js.load_user_data('user.json'))
+    
