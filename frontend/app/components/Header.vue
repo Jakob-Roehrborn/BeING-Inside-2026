@@ -1,23 +1,27 @@
 <template>
-    <div class="font-title">
-        <div class="flex flex-row items-center w-full justify-center gap-3">
-            <div class="text-sachsenrot text-6xl font-extrabold">Dynamisch</div>
-            <div class="my-3 text-2xl font-semibold tracking-wide text-left pt-2.5">
-                <div>im Leben</div>
-                <div>im Strom</div>
+    <div class="font-title text-center">
+        <div class="flex flex-col md:flex-row items-center w-full justify-center gap-1 md:gap-3">
+
+            <div class="text-sachsenrot text-4xl md:text-6xl font-extrabold">
+                Dynamisch
             </div>
+
+            <div
+                class="flex flex-row md:flex-col items-center md:items-start justify-center gap-3 md:gap-0 my-2 md:my-3 text-lg md:text-2xl font-semibold tracking-wide md:text-left md:pt-2.5">
+                <span class="whitespace-nowrap">im Leben</span>
+
+                <span class="md:hidden text-sachsenrot">•</span>
+
+                <span class="whitespace-nowrap">im Strom</span>
+            </div>
+
         </div>
-        <div class="text-5xl font-semibold">Stromrechner</div>
+
+        <div class="text-3xl md:text-5xl font-semibold mt-2 md:mt-0">
+            Stromrechner
+        </div>
     </div>
 
-    <!-- <h1 class="text-4xl font-extrabold text-slate-950 tracking-tight sm:text-5xl">
-        Dynamischer <span class="text-sachsenrot">Stromtarif-Rechner</span>
-    </h1>
-    <p class="mt-4 text-xl text-slate-600 max-w-3xl mx-auto">
-        Ermitteln Sie Ihr jährliches Einsparpotenzial, indem Sie Ihren
-        Stromverbrauch durch einen dynamischen Tarif intelligent in günstige Stunden
-        verlegen.
-    </p> -->
 </template>
 
 <script lang="ts" setup></script>
