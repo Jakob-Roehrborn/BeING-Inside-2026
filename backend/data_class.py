@@ -10,9 +10,7 @@ class Coordinates:
 @dataclass
 class GeneralInfo:
     postal_code: str
-    city: str
     coordinates: Coordinates
-    number_of_person: int
     total_consumption: int
     eprice: float
     smart: bool
@@ -24,7 +22,6 @@ class SolarSystem:
     azimuth: int
     tilt: int
     capacity_kwp: float
-    area_sqm: float
 
 @dataclass
 class HeatPump:
@@ -47,17 +44,12 @@ class Memory:
     capacity_kWh: float
 
 @dataclass
-class Metadata:
-    last_updated: str
-
-@dataclass
 class input_data:
     general_info: GeneralInfo
     solar_system: SolarSystem
     heat_pump: HeatPump
     ecar: ECar
     memory: Memory
-    metadata: Metadata
 
 def input_to_class(data: dict) -> input_data:
     gen_dict = data["general_info"].copy()
@@ -68,7 +60,6 @@ def input_to_class(data: dict) -> input_data:
         heat_pump = HeatPump(**data["heat_pump"]),
         ecar = ECar(**data["ecar"]),
         memory = Memory(**data["memory"]),
-        metadata = Metadata(**data["metadata"])
     )
 
 # ----- output Data -----
@@ -86,7 +77,7 @@ class output_data:
     cost_dynamic: float
     cost_const: float
     savings_dynamic: float
-    
+
     cost_modul_1: float
     cost_modul_2: float
     cost_modul_3: float

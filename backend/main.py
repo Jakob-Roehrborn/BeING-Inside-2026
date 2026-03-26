@@ -10,7 +10,7 @@ import user_json_new as js
 from eauto2 import simuliere_e_auto_mit_soc
 from kosten_calc2 import berechne_stromkosten_nach_14a_dynamisch
 from data_class import output_data
-from plotly_diagramme import plot_zeitreihe_optimiert
+import plotly_diagramme as pt
 
 from ploten import plot_auswertung
 from debugprint import debugprints
@@ -116,10 +116,9 @@ def main_backend():
     #print('Haushalt:', (df["household"]).sum())
     print('Solar:', (df["solar"]).sum())
 
-    #plot_zeitreihe_optimiert(df,['netz_bezug','netz_einspeisung'],glättung_stunden=24)
-    #print('netz_bezug:',(-input_user.general_info.eprice * df['netz_bezug']).sum(), 'netz_einspeisung', (0.0778 * df['netz_einspeisung']).sum())
-    #plot_zeitreihe_optimiert(df,['kosten_konstant','kosten_dynamisch'],glättung_stunden=24, title=f'Kosten konstant ({input_user.general_info.eprice*100} ct/kWh) vs. dynamisch')
-    #df.to_csv("test_df.csv", index=False)
+    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], glättung_stunden = 24, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife')
+    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], glättung_stunden = 24, title = 'Einspeisung vs Netzbezug')
+
 
     return output_data( # muss noch angepasst werden 
         netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),

@@ -82,4 +82,4 @@ def berechne_stromkosten_nach_14a_dynamisch(df, df_prices):
         ersparnis = kosten_modul1_gesamt - kosten_modul3_gesamt
         print(f"=> Modul 3 ist am günstigsten! (Zusätzliche Ersparnis zu Modul 1: {ersparnis:.2f} €)")
     df_module.to_csv('model.csv', index=False)
-    return df_module
+    return df_module, netz_bezug_steuerbar_std.sum(), 

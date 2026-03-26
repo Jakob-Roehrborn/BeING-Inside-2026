@@ -1,12 +1,10 @@
 {
     "general_info": {
         "postal_code": "01098",
-        "city": "wird nicht meher ermittelt",
         "coordinates": {
             "latitude": 42.4114854,
             "longitude": -72.6937227
         },
-        "number_of_person": 4,
         "total_consumption": 7900,
         "eprice": 0.4,
         "smart": true
@@ -15,8 +13,7 @@
         "exist": true,
         "azimuth": 180,
         "tilt": 35,
-        "capacity_kwp": 10.0,
-        "area_sqm": 50.0
+        "capacity_kwp": 10.0
     },
     "heat_pump": {
         "exist": true,
@@ -34,8 +31,5 @@
     "memory": {
         "exist": true,
         "capacity_kWh": 10.0
-    },
-    "metadata": {
-        "last_updated": "2026-03-26"
     }
 }

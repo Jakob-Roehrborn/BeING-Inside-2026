@@ -29,7 +29,6 @@ def update_config_from_api(user_obj: input_data):
             # Werte direkt im Objekt setzen (Punkt-Notation!)
             user_obj.general_info.coordinates.latitude = location.latitude
             user_obj.general_info.coordinates.longitude = location.longitude
-            user_obj.metadata.last_updated = datetime.now().strftime('%Y-%m-%d')
             
             print(f'Koordinaten für {plz} aktualisiert: {location.latitude}, {location.longitude}')
         else:
