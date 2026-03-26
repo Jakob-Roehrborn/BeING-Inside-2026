@@ -6,9 +6,9 @@ import time
 import errno
 
 
-SSID = 'vindictiveVi'
-PASSWORD = 'getonthisshit' 
-HOST = "192.168.137.1"
+SSID = 'beingpico'
+PASSWORD = 'bittebittegeh' 
+HOST = "192.168.12.1"
 PORT = "5000"
 
 #------------------------Logic-----------------------
@@ -22,25 +22,28 @@ Pin(16, Pin.OUT).value(1)
 Pin(17, Pin.OUT).value(1)
 Pin(18, Pin.OUT).value(1)
 
-
-def module_check():
-    modules_w=[0,0,0,0]
+empty_list = [0 for i in range(512)]
+modules_w=[empty_list.copy() for i in range(4)]
+def module_check(i):
+    
     if pin_solar.read_u16() > 1000:
-        modules_w[0] = 1
-    else: modules_w[0] = 0
+        modules_w[0][i] = 1
+    else: modules_w[0][i] = 0
 
-    modules_w[1] = int(not pin_auto.value() )
+    modules_w[1][i] = int(not pin_auto.value() )
 
     if pin_waermepumpe.read_u16() > 1000:
-        modules_w[2] = 1
+        modules_w[2][i] = 1
     else:
-        modules_w[2] = 0
+        modules_w[2][i] = 0
     
     if pin_speicher.read_u16() > 1000:
-        modules_w[3] = 1
-    else: modules_w[3] = 0
+        modules_w[3][i] = 1
+    else: modules_w[3][i] = 0
     return modules_w
 
+
+    
 
 def send(module: int, state: int):
     payload = {
@@ -49,6 +52,7 @@ def send(module: int, state: int):
     }
     headers = {"Content-Type": "application/json"}
     json_data = ujson.dumps(payload)
+    print(payload)
     try: 
         response = urequests.post(f'http://{HOST}:{PORT}/api/module_change', data=json_data, headers=headers)
         print(response)
@@ -61,11 +65,13 @@ def send(module: int, state: int):
     
 
 
-def change_det(old,new):
-    for i in range(4):
-        if old[i] == new[i]: continue
-        send(i, new[i])
-        time.sleep(0.5)
+av=[0,0,0,0]
+
+def change_det(new, old_av):
+    for k in range(4):
+        av[k] = round(sum(new[k]) / len(new[k]))
+        if av[k] == old_av[k]: continue
+        send(k, av[k])
 
 #-------------------------Network-----------------------------
 
@@ -82,13 +88,16 @@ def network_init():
 #--------------------------Main-------------------------------
 
 def main():
-    modules=[0,0,0,0]
+    modules=[[0],[0],[0],[0]]
     network_init()
     send(6,6)
+    i = 0
     while True:
-        modules_old= modules.copy()
-        modules= module_check()
-        change_det(modules_old,modules)
+        modules= module_check(i)
+        old_average = av.copy()
+        change_det(modules, old_average)
+        i+=1
+        i = i%512
     
 if __name__ == "__main__":
     main()
