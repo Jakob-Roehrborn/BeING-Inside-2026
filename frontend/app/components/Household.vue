@@ -13,14 +13,14 @@
             </div>
 
         </div>
-
-        <div class="my-6" />
-
-        <div class="flex flex-col items-center gap-4 bg-slate-50 p-4 rounded-xl">
+             
+        <div class="flex flex-col items-center gap-4 bg-slate-50 p-4 rounded-xl my-8">
             <UtilsInput v-model="model.total_consumption" title="Geschätzter Jahresstromverbrauch" placeholder="4500"
-                unit="kWh/Jahr" :required="true" class="w-full" />
+            unit="kWh/Jahr" :required="true" class="w-full" />
             <UtilPersonSlider class="w-full" v-model="people" />
         </div>
+        
+        <UtilsInput v-model="model.eprice" title="Bisheriger Stromtarif" placeholder="0.37" unit="€/kWh" />
     </div>
 </template>
 

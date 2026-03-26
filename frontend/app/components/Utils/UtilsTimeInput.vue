@@ -1,15 +1,13 @@
 <template>
     <div class="flex flex-col gap-1.5">
-        <label v-if="label" :for="id" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label v-if="label" class="text-sm font-medium text-slate-700 mb-1 pl-1.5 inline-flex items-center">
             {{ label }}
-            <span v-if="required" class="text-red-500">*</span>
+            <span v-if="required" class="text-red-500 ml-1 font-bold">*</span>
         </label>
 
-        <div class="relative">
-            <input :id="id" type="time" :value="modelValue" :disabled="disabled" :required="required"
-                @input="$emit('update:modelValue', $event.target.value)"
-                class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-blue-400 dark:focus:ring-blue-400" />
-
+        <div>
+            <input v-model="timeStr" type="time" :disabled="disabled" :required="required"
+                class="w-full styled-input px-4 py-2" />
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                 <svg class="h-4 w-4 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
@@ -25,39 +23,29 @@
     </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
 
-// Define props
-const props = defineProps({
-    modelValue: {
-        type: String,
-        default: '',
-        // Native time input expects "HH:mm" format (24h) under the hood
-    },
-    label: {
-        type: String,
-        default: ''
-    },
-    hint: {
-        type: String,
-        default: ''
-    },
-    disabled: {
-        type: Boolean,
-        default: false
-    },
-    required: {
-        type: Boolean,
-        default: false
-    }
+const props = defineProps < {
+    label: string
+    hint?: string,
+    disabled?: boolean,
+    required?: boolean,
+
+} > ()
+
+const model = defineModel < number > ({ required: true })
+
+const timeStr = ref()
+
+watch(timeStr, (timeStr) => {
+    if (!timeStr) return null
+
+    const [hours, minutes] = timeStr.split(':').map(Number)
+
+    model.value = Math.round((hours + (minutes / 60)) * 100) / 100
+    console.log(model.value)
 })
 
-// Define emits for v-model compatibility
-defineEmits(['update:modelValue'])
-
-// Generate a unique ID for accessibility linking between label and input
-const id = computed(() => `time-input-${Math.random().toString(36).substring(2, 9)}`)
 </script>
 
 <style scoped>
