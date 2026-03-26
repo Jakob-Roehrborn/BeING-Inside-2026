@@ -1,13 +1,25 @@
 <template>
     <div>
-        <UtilsInput v-model="model.zip_code" title="PLZ" :required="true" />
+        <!-- <UtilsInput v-model="model.zip_code" title="PLZ" input_type="text" :required="true" /> -->
 
-        <div class="my-6"/>
+        <div>
+            <label for="consumption" class="text-sm font-medium text-slate-700 mb-1 pl-1.5 inline-flex items-center">
+                PLZ
+                <span class="text-red-500 ml-1 font-bold">*</span>
+            </label>
+
+            <div class="relative rounded-md shadow-sm">
+                <input v-model="model.zip_code" class="w-full px-4 py-3 text-lg styled-input" />
+            </div>
+
+        </div>
+
+        <div class="my-6" />
 
         <div class="flex flex-col items-center gap-4 bg-slate-50 p-4 rounded-xl">
-            <UtilsInput v-model="model.consumption" title="Geschätzter Jahresstromverbrauch" placeholder="4500" unit="kWh/Jahr" :required="true"
-            class="w-full"/> 
-            <UtilPersonSlider class="w-full" v-model="people"/>
+            <UtilsInput v-model="model.consumption" title="Geschätzter Jahresstromverbrauch" placeholder="4500"
+                unit="kWh/Jahr" :required="true" class="w-full" />
+            <UtilPersonSlider class="w-full" v-model="people" />
         </div>
     </div>
 </template>
@@ -25,7 +37,7 @@ let ignore_slider = false
 watch(() => model.value.consumption, () => {
     console.log("WATCH")
     ignore_slider = true
-    setTimeout(()=>ignore_slider = false, 50)
+    setTimeout(() => ignore_slider = false, 50)
     let new_people = 0
     for (let i = 0; i < CONSUMPTION.length; i++) {
         if (model.value.consumption >= CONSUMPTION[i]!) {
