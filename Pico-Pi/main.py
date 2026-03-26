@@ -5,6 +5,7 @@ import ujson
 import time
 import errno
 
+
 SSID = 'vindictiveVi'
 PASSWORD = 'getonthisshit' 
 HOST = "192.168.137.1"
@@ -41,7 +42,7 @@ def module_check():
     return modules_w
 
 
-def send(module,state):
+def send(module: int, state: int):
     payload = {
         "module" : module,
         "state": state,
@@ -49,13 +50,14 @@ def send(module,state):
     headers = {"Content-Type": "application/json"}
     json_data = ujson.dumps(payload)
     try: 
-       response = urequests.post('http://{HOST}:{PORT}/module_change', data=json_data, headers=headers)
-       print(response)
+        response = urequests.post(f'http://{HOST}:{PORT}/api/module_change', data=json_data, headers=headers)
+        print(response)
+        response.close()
 
     except OSError as e :
         if e.errno == errno.EHOSTUNREACH:
                 print(f"Error: Host unreachable for index")
-    urequests.close()
+        print(e)
     
 
 
@@ -70,6 +72,7 @@ def change_det(old,new):
 def network_init():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
+    wlan.config(pm = 0xa11140)
     while not wlan.isconnected():
         wlan.connect(SSID, PASSWORD)
         print("connecting")
