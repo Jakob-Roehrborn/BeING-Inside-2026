@@ -12,9 +12,12 @@ from kosten_calc2 import berechne_stromkosten_nach_14a_dynamisch
 from data_class import output_data
 import plotly_diagramme as pt
 
+from data_class import input_data
+
 from ploten import plot_auswertung
 from debugprint import debugprints
-def main_backend():
+
+def main_backend(input_user: input_data):
 
     def timestamp():
         start_date = "2025-01-01 00:00:00"

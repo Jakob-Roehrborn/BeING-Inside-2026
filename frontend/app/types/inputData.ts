@@ -26,6 +26,7 @@ export interface ECar {
     wallbox: boolean,
     start_ladezeit: number,
     akku_grosse: number,
+    anteil_zu_Hause: number,
 }
 
 export interface HeatPump {
@@ -37,6 +38,7 @@ export interface GeneralInfo {
     total_consumption: number,
     postal_code: String,
     eprice: number,
+    smart: boolean,
 }
 
 export const defaultData: inputData = {
@@ -53,7 +55,8 @@ export const defaultData: inputData = {
         ziel_jahreskilometer: 13000,
         verbrauch_kwh_pro_100km: 14,
         akku_grosse: 64,
-        start_ladezeit: 0
+        start_ladezeit: 0,
+        anteil_zu_Hause: 75,
     },
     memory: {
         exist: false,
@@ -67,5 +70,6 @@ export const defaultData: inputData = {
         total_consumption: 3200,
         postal_code: "01067",
         eprice: 0.37,
+        smart: true,
     }
 }
