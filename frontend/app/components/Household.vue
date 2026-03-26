@@ -3,7 +3,7 @@
         <!-- <UtilsInput v-model="model.zip_code" title="PLZ" input_type="text" :required="true" /> -->
 
         <div>
-            <label for="consumption" class="text-sm font-medium text-slate-700 mb-1 pl-1.5 inline-flex items-center">
+            <label class="text-sm font-medium text-slate-700 mb-1 pl-1.5 inline-flex items-center">
                 PLZ
                 <span class="text-red-500 ml-1 font-bold">*</span>
             </label>

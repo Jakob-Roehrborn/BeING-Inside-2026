@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label for="consumption" class="text-sm font-medium text-slate-700 mb-1 pl-1.5 inline-flex items-center">
+        <label class="text-sm font-medium text-slate-700 mb-1 pl-1.5 inline-flex items-center">
             {{ props.title }}
             <span v-if="props.required" class="text-red-500 ml-1 font-bold">*</span>
         </label>

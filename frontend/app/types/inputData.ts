@@ -55,7 +55,7 @@ export const defaultData: inputData = {
         ziel_jahreskilometer: 13000,
         verbrauch_kwh_pro_100km: 14,
         akku_grosse: 64,
-        start_ladezeit: 0,
+        start_ladezeit: 12,
         anteil_zu_Hause: 75,
     },
     memory: {

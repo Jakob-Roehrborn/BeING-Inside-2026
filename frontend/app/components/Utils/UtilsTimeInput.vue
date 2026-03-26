@@ -25,15 +25,15 @@
 
 <script setup lang="ts">
 
-const props = defineProps < {
+const props = defineProps<{
     label: string
     hint?: string,
     disabled?: boolean,
     required?: boolean,
 
-} > ()
+}>()
 
-const model = defineModel < number > ({ required: true })
+const model = defineModel<number>({ required: false })
 
 const timeStr = ref()
 

@@ -1,12 +1,13 @@
 <template>
     <div>
-        <div class="flex justify-between shadow pb-2 mb-4 mt-8 bg-slate-100 py-2 px-4 rounded-xl">
+        <div class="flex flex-row justify-between items-center shadow pb-2 mb-4 mt-8 bg-slate-100 py-2 px-4 rounded-xl">
 
             <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
                 {{props.title}}
             </h2>
 
-            <UtillsYesNoButton v-model="model.exist" />
+            <!-- <UtillsYesNoButton v-model="model.exist" /> -->
+            <UtilsPillSwitch v-model="model.exist"/>
         </div>
 
         <slot v-if="model.exist"/>
@@ -16,6 +17,7 @@
 <script lang="ts" setup>
 import type { SolarSystem, ECar, Memory, HeatPump } from '~/types/inputData';
 import UtillsYesNoButton from '../Utils/UtillsYesNoButton.vue';
+import UtilsPillSwitch from '../Utils/UtilsPillSwitch.vue';
 
 const props = defineProps<{
     title: String

@@ -9,7 +9,7 @@
                 <UtilsInput v-model="model.tilt" title="Neigung der Solaranlage" placeholder="30" , unit="°" class="w-2/3" />
 
                 <div class="w-1/3">
-                    <label for="consumption" class="text-sm font-medium text-slate-700 mb-1 pl-1.5 w-full">
+                    <label class="text-sm font-medium text-slate-700 mb-1 pl-1.5 w-full">
                         Ausrichtung
                     </label>
                     <div class="relative rounded-md shadow-sm w-full">

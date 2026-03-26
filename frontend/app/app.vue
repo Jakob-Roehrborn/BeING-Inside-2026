@@ -10,7 +10,8 @@
 
                 <InputForm v-model="inData" :is-loading="isLoading" @submit="calculateSavings" />
 
-                <Output :is-loading="isLoading" , :results="outData" />
+                <!-- <Output :is-loading="isLoading" , :results="outData" /> -->
+                <ResultDashboard :is-loading="isLoading" :results="outData"/>
 
             </div>
 
@@ -19,6 +20,7 @@
 </template>
 
 <script lang="ts" setup>
+import ResultDashboard from './components/ResultDashboard.vue';
 import type inputData from './types/inputData';
 import { defaultData } from './types/inputData';
 import type outputData from './types/outputData';
@@ -33,16 +35,16 @@ const inData = ref<inputData>({
 
     },
     memory: {
-        exists: false
+        exist: false
     },
     ecar: {
-        exists: false
+        exist: false
     },
     solar_system: {
-        exists: false
+        exist: false
     },
     heat_pump: {
-        exists: false
+        exist: false
     }
 })
 const outData = ref<outputData | undefined>()
@@ -108,7 +110,6 @@ const calculateSavings = async () => {
 
 // Reactive state variables
 const isConnected = ref(false)
-const serverMessage = ref('')
 let socket = null
 
 onMounted(() => {
@@ -128,22 +129,26 @@ onMounted(() => {
         console.log('Received from server:', payload)
         let module: number = payload["module"]
         let state: boolean = Boolean(payload["state"])
+        console.log('mod', module, "state", state)
         // #Module = [PV, EV, WP, Batterie]
         switch (module) {
             case 0: {
                 inData.value.solar_system.exist = state
+                break
             }
             case 1: {
                 inData.value.ecar.exist = state
+                break
             }
             case 2: {
                 inData.value.heat_pump.exist = state
+                break
             }
             case 3: {
                 inData.value.memory.exist = state
+                break
             }
         }
-        serverMessage.value = payload.data
     })
 })
 
