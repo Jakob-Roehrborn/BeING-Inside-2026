@@ -12,6 +12,8 @@ from kosten_calc2 import berechne_stromkosten_nach_14a_dynamisch
 from data_class import output_data
 import plotly_diagramme as pt
 
+from plott_math import plot_household_year
+
 from not_use.ploten import plot_auswertung
 from debugprint import debugprints
 def main_backend():
@@ -23,7 +25,6 @@ def main_backend():
         formatted_timestamps = full_year.strftime('%m-%d %H:00')
         
         return formatted_timestamps
-
 
     input_user = js.load_user_data('user.json')
     js.update_config_from_api(input_user) # setzt die Koordinaten basierend auf der plz
@@ -54,14 +55,16 @@ def main_backend():
         df['heat_pump'] = 0
 
     if input_user.ecar.exist:
-        household_con_tot =  household_con_tot - ecar_con
+        household_con_tot =  household_con_tot - ecar_con*input_user.ecar.anteil_zu_Hause
         ladeleistung = 11 if input_user.ecar.wallbox else 2.7
         df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit, input_user.ecar.anteil_zu_Hause)
+        
     else:
         df['ecar'] = 0      
 
     if   household_con_tot > 0 :
         df['household'] = household(smart = input_user.general_info.smart)*household_con_tot
+
         quatscheingabe = False
     else : 
         quatscheingabe = True
@@ -138,7 +141,8 @@ def main_backend():
         solar = df["solar"].sum(),
         household = df["household"].sum(),
         heat_pump = df['heat_pump'].sum(),
-        controllable_load = controllable_load, # Gesamtverbrauch ohne Haushalt Wird bei den Modulen beachtet
+        controllable_load = controllable_load, 
+        eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum()),
         
         cost_dynamic = df['kosten_dynamisch'].iat[-1], # zu bezahlen für den Kunden = positiv
         cost_const = df['kosten_konstant'].iat[-1],
@@ -146,7 +150,8 @@ def main_backend():
         
         cost_modul_1 = df_module['Modul1'].sum(),
         cost_modul_2 = df_module['Modul2'].sum(),
-        cost_modul_3 = df_module['Modul3'].sum()) 
+        cost_modul_3 = df_module['Modul3'].sum())
+        #eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum())
 
 # prüft ob Wetterdaten für eine plz bereits vorhanden ist
 def weather_cvs_exists(plz):
@@ -158,4 +163,9 @@ def weather_cvs_exists(plz):
 
 if __name__ == "__main__":
     main_backend()
+    # df = pd.DataFrame()
+    # x, df['smart'] = main_backend(smart=True, ladezeit=13)
+    # x, df['nicht'] = main_backend(smart=False, ladezeit=18)
+    # print('Smart', df['smart'].iat[-1], 'normal', df['nicht'].iat[-1], 'Ersparnis', df['nicht'].iat[-1]-df['smart'].iat[-1])
+    # plot_household_year(df)
 

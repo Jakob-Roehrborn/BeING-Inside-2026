@@ -6,6 +6,7 @@ import pandas as pd
 
 def household(smart = False):   
     input_file = r'material/hausehold_smart.csv' if smart else r'material/hausehold_normal.csv'
+    print('input', input_file)
     df = pd.read_csv(input_file, sep=',', comment='#')
     return df[['return_value']]
 
