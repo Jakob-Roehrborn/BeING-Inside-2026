@@ -8,9 +8,9 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
 
-                <InputForm v-model="inData!" :is-loading="isLoading" @submit="calculateSavings" />
+                <InputForm v-model="inData" :is-loading="isLoading" @submit="calculateSavings" />
 
-                <Output :is-loading="isLoading" , :results="outData!" />
+                <Output :is-loading="isLoading" , :results="outData" />
 
             </div>
 
