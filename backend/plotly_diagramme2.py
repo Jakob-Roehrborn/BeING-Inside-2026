@@ -1,11 +1,15 @@
-# wichtig für png Generierung:  pip install -U kaleido
+# wichtig für png Generierung:  pip install kaleido==0.2.1
+# erstellt Diagramme als html, png in Ordner diagrams
+# als png braucht sehr lange
+# jeder plott eigene Funktion rolling_hours approx 24*7 Graphen schöner
 
 import pandas as pd
 import plotly.express as px
-import numpy as np
+import plotly.io as pio
 
+pio.kaleido.scope.default_format = "png" # wichtig png Erstellung viel schneller -> Engine wird nicht jedes mal neu gestartet 
 
-def plot_cost(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True):
+def plot_cost(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True, png = False):
 
     df = df.copy()
     df.index = pd.date_range(start="2025-01-01", periods=len(df), freq="h")
@@ -52,11 +56,11 @@ def plot_cost(df, columns, days = 365, start_day = 0, rolling_hours = 24, title 
                     legend_title_text='Legende')
     
     fig.write_html(r"diagrams/cost_diagram.html", include_plotlyjs = 'directory') # 'cdn' benötigt Internet 
-    fig.write_image(r"diagrams/cost_diagram.png", scale=2, width=1200, height=600) # wäre auch als pdf, svg möglich
+    if png:
+        fig.write_image(r"diagrams/cost_diagram.png", scale=2, width=1200, height=600) # wäre auch als pdf, svg möglich
     return fig
 
-
-def plot_grid_exchange(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True):
+def plot_grid_exchange(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True, png = False):
 
     df = df.copy()
     df.index = pd.date_range(start= "2025-01-01", periods=len(df), freq="h")
@@ -90,23 +94,17 @@ def plot_grid_exchange(df, columns, days = 365, start_day = 0, rolling_hours = 2
         ticklabelmode="period"
     )
 
-    # geht auch:
-    # fig.update_layout(
-    # plot_bgcolor="rgba(0,0,0,0)",  # Transparenter Hintergrund
-    # paper_bgcolor="rgba(0,0,0,0)", # Transparenter Rand
-    # font_color="#f0f0f0"           # Deine exakte Schriftfarbe
-    # )
-
     fig.update_layout(hovermode="x unified", 
                     xaxis_title="Monat", 
                     yaxis_title = 'kWh',
                     legend_title_text='Legende')
     
     fig.write_html(r"diagrams/plot_grid_exchange.html", include_plotlyjs='directory') # 'cdn' benötigt Internet 
-    fig.write_image(r"diagrams/plot_grid_exchange.png", scale=2, width=1200, height=600)
+    if png:
+        fig.write_image(r"diagrams/plot_grid_exchange.png", scale=2, width=1200, height=600)
     return fig
 
-def plot_grid_exchange_cumsum(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True):
+def plot_grid_exchange_cumsum(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True, png = False):
 
     df = df.copy()
     df.index = pd.date_range(start="2025-01-01", periods=len(df), freq="h")
@@ -140,20 +138,14 @@ def plot_grid_exchange_cumsum(df, columns, days = 365, start_day = 0, rolling_ho
         ticklabelmode="period"
     )
 
-    # geht auch:
-    # fig.update_layout(
-    # plot_bgcolor="rgba(0,0,0,0)",  # Transparenter Hintergrund
-    # paper_bgcolor="rgba(0,0,0,0)", # Transparenter Rand
-    # font_color="#f0f0f0"           # Deine exakte Schriftfarbe
-    # )
-
     fig.update_layout(hovermode="x unified", 
                     xaxis_title="Monat", 
                     yaxis_title = 'kWh',
                     legend_title_text='Legende')
     
     fig.write_html(r"diagrams/plot_grid_exchange_cumsum.html", include_plotlyjs='directory') # 'cdn' benötigt Internet 
-    fig.write_image(r"diagrams/plot_grid_exchange_cumsum.png", scale=2, width=1200, height=600)
+    if png:
+        fig.write_image(r"diagrams/plot_grid_exchange_cumsum.png", scale=2, width=1200, height=600)
     return fig
 
 #if __name__ == '__main__':
