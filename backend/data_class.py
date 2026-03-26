@@ -77,7 +77,16 @@ def input_to_class(data: dict) -> input_data:
 class output_data:
     netz_einspeisung_kwh: float
     netz_bezug_kwh: float
-    gesamtkosten_euro: float
+    ecar: float
+    solar: float
+    household: float
+    heat_pump: float
+    controllable_load: float
+
+    cost_dynamic: float
+    cost_const: float
+    savings_dynamic: float
+    
     cost_modul_1: float
     cost_modul_2: float
     cost_modul_3: float

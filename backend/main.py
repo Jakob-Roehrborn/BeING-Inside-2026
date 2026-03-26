@@ -107,7 +107,7 @@ def main_backend():
     df["ges_price"] =- df_prices["customer_price_gross_ct_per_kwh_konzession_1_32"]*df["netz_bezug"]/100+0.0778*df['netz_einspeisung']
     #debugprints(df, input_user, quatscheingabe)
     df_module = pd.DataFrame()
-    df_module = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
+    df_module, controllable_load = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
     df['kosten_konstant'] = (-(-input_user.general_info.eprice * df['netz_bezug'] + 0.0778 * df['netz_einspeisung'])).cumsum()
     df['kosten_dynamisch'] = -df['ges_price'].cumsum()
 
@@ -124,13 +124,20 @@ def main_backend():
     return output_data( # muss noch angepasst werden 
         netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),
         netz_bezug_kwh = (df["netz_bezug"]).sum(),
-        cost_dynamic = df['kosten_dynamisch'].iat[-1] # zu bezahlen für den Kunden = positiv
-        cost_const = df['kosten_konstant'].iat[-1]
-        savings_dynamic = df['kosten_konstant'].iat[-1] - df['kosten_dynamisch'].iat[-1] # Ersparnis mit flexiblem Strompreis
+        
+        ecar = df['ecar'].sum(),
+        solar = df["solar"].sum(),
+        household = df["household"].sum(),
+        heat_pump = df['heat_pump'].sum(),
+        controllable_load = controllable_load, # Gesamtverbrauch ohne Haushalt Wird bei den Modulen beachtet
+        
+        cost_dynamic = df['kosten_dynamisch'].iat[-1], # zu bezahlen für den Kunden = positiv
+        cost_const = df['kosten_konstant'].iat[-1],
+        savings_dynamic = df['kosten_konstant'].iat[-1] - df['kosten_dynamisch'].iat[-1], # Ersparnis mit flexiblem Strompreis
+        
         cost_modul_1 = df_module['Modul1'].sum(),
         cost_modul_2 = df_module['Modul2'].sum(),
-        cost_modul_3 = df_module['Modul3'].sum()
-    ) 
+        cost_modul_3 = df_module['Modul3'].sum()) 
 
 # prüft ob Wetterdaten für eine plz bereits vorhanden ist
 def weather_cvs_exists(plz):
