@@ -5,4 +5,7 @@
 
 .venv/
 user.json
-diagrams/
+
+diagrams/*
+# keep folder around!!! 
+!diagrams/.gitkeep
