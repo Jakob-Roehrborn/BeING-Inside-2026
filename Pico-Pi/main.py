@@ -1,8 +1,14 @@
 from machine import Pin, ADC
 import network
 import urequests
+import ujson
 import time
+import errno
 
+SSID = 'vindictiveVi'
+PASSWORD = 'getonthisshit' 
+HOST = "192.168.137.1"
+PORT = "5000"
 
 #------------------------Logic-----------------------
 #Module = [PV,EV,WP,Batterie]
@@ -14,6 +20,7 @@ pin_waermepumpe = ADC(Pin(28))
 Pin(16, Pin.OUT).value(1)
 Pin(17, Pin.OUT).value(1)
 Pin(18, Pin.OUT).value(1)
+
 
 def module_check():
     modules_w=[0,0,0,0]
@@ -35,9 +42,21 @@ def module_check():
 
 
 def send(module,state):
-    message = (module,state)
-    response = urequests.post('http://127.0.0.1:5000/module_change', data = {message})
-    print(response)
+    payload = {
+        "module" : module,
+        "state": state,
+    }
+    headers = {"Content-Type": "application/json"}
+    json_data = ujson.dumps(payload)
+    try: 
+       response = urequests.post('http://{HOST}:{PORT}/module_change', data=json_data, headers=headers)
+       print(response)
+
+    except OSError as e :
+        if e.errno == errno.EHOSTUNREACH:
+                print(f"Error: Host unreachable for index")
+    urequests.close()
+    
 
 
 def change_det(old,new):
@@ -47,15 +66,14 @@ def change_det(old,new):
         time.sleep(0.5)
 
 #-------------------------Network-----------------------------
-ssid = 'vindictiveVi'
-password = 'getonthisshit' 
+
 def network_init():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
-    wlan.connect(ssid, password)
     while not wlan.isconnected():
-            print("connecting")
-            time.sleep(0.1)
+        wlan.connect(SSID, PASSWORD)
+        print("connecting")
+        time.sleep(1)
     print("con successfull")
 
 #--------------------------Main-------------------------------
@@ -63,9 +81,7 @@ def network_init():
 def main():
     modules=[0,0,0,0]
     network_init()
-    message=(1,2)
-    response = urequests.post('http://127.0.0.1:5000/module_change', data = {message})
-    print(response)
+    send(6,6)
     while True:
         modules_old= modules.copy()
         modules= module_check()
