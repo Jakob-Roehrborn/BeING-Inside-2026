@@ -108,27 +108,25 @@ def main_backend():
     #debugprints(df, input_user, quatscheingabe)
     df_module = pd.DataFrame()
     df_module = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
+    df['kosten_konstant'] = (-(-input_user.general_info.eprice * df['netz_bezug'] + 0.0778 * df['netz_einspeisung'])).cumsum()
+    df['kosten_dynamisch'] = -df['ges_price'].cumsum()
 
     #plot_auswertung(df, input_user.memory.capacity_kWh, input_user)
 
     #print('Haushalt:', (df["household"]).sum())
     print('Solar:', (df["solar"]).sum())
-    # print('Netzeinspeisung:', (df["netz_einspeisung"]).sum())
-    # print('Netzbezug:', (df["netz_bezug"]).sum())
-    # print('Gesamtpreis:', (df['ges_price']).sum())
-    # print('Gesamtverbrauch:', df['total_consumption'].min())
 
     #plot_zeitreihe_optimiert(df,['netz_bezug','netz_einspeisung'],glättung_stunden=24)
-    #df['kosten_konstant'] = (-(-input_user.general_info.eprice * df['netz_bezug'] + 0.0778 * df['netz_einspeisung'])).cumsum()
     #print('netz_bezug:',(-input_user.general_info.eprice * df['netz_bezug']).sum(), 'netz_einspeisung', (0.0778 * df['netz_einspeisung']).sum())
-    #df['kosten_dynamisch'] = -df['ges_price'].cumsum()
     #plot_zeitreihe_optimiert(df,['kosten_konstant','kosten_dynamisch'],glättung_stunden=24, title=f'Kosten konstant ({input_user.general_info.eprice*100} ct/kWh) vs. dynamisch')
     #df.to_csv("test_df.csv", index=False)
 
     return output_data( # muss noch angepasst werden 
         netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),
         netz_bezug_kwh = (df["netz_bezug"]).sum(),
-        gesamtkosten_euro = (df['ges_price']).sum(),
+        cost_dynamic = df['kosten_dynamisch'].iat[-1] # zu bezahlen für den Kunden = positiv
+        cost_const = df['kosten_konstant'].iat[-1]
+        savings_dynamic = df['kosten_konstant'].iat[-1] - df['kosten_dynamisch'].iat[-1] # Ersparnis mit flexiblem Strompreis
         cost_modul_1 = df_module['Modul1'].sum(),
         cost_modul_2 = df_module['Modul2'].sum(),
         cost_modul_3 = df_module['Modul3'].sum()
