@@ -7,7 +7,7 @@ from main import main_backend
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/calculate', methods=['POST'])
+@app.route('/api/calculate', methods=['POST'])
 def calculate():
     json_data = request.get_json() 
     
@@ -17,11 +17,11 @@ def calculate():
     data = input_data(**json_data)
     
     output = main_backend(data)
-    print(output)
-    # return make_response(jsonify(asdict(output)), 200)
+    # print(output)
+    return make_response(jsonify(asdict(output)), 200)
     return make_response("toll", 200)
 
-@app.route("/module_change", methods=["POST"])
+@app.route("/api/module_change", methods=["POST"])
 def module_change():
     data_json = request.get_json()
     print(data_json)

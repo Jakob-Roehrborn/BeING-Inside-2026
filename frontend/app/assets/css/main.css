@@ -1,0 +1,32 @@
+/* assets/css/main.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+@import "tailwindcss";
+
+
+@theme {
+    --font-title: "Michroma", sans-serif;
+}
+
+@layer components {
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+}
+
+
+@theme {
+    --color-sachsenrot: #d50037;
+}
+
+@utility styled-input {
+    @apply rounded-lg border border-slate-300 transition duration-150 outline-0 outline-sachsenrot active:outline-2 focus:outline-2
+}
