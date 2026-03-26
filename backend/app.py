@@ -1,12 +1,31 @@
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, Response
 from flask_cors import CORS
+from flask_socketio import SocketIO, emit
 from dataclasses import asdict
 from data_class import input_data
 from main import main_backend
 import user_json_new as js
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'WS-key'
 CORS(app)
+
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+@socketio.on('connect')
+def handle_connect():
+    print("WS CON")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print("WS DISCON")
+
+# @socketio.on('client_message')
+# def handle_client_message(payload):
+#     print('Received message from frontend:', payload)
+    
+#     response = f"Server heard you say: {payload}"
+#     emit('server_message', {'data': response})
 
 @app.route('/api/calculate', methods=['POST'])
 def calculate():
@@ -20,15 +39,24 @@ def calculate():
     js.save_user_data(data, 'user.json') # speichert die Änderung
      
     output = main_backend(data)
-    # print(output)
-    return make_response(jsonify(asdict(output)), 200)
+
+    return make_response(output.model_dump_json(), 200)
     return make_response("toll", 200)
 
 @app.route("/api/module_change", methods=["POST"])
 def module_change():
     data_json = request.get_json()
     print(data_json)
+    emit('module_change', data_json)
+
     return make_response("Ok", 200)
+
+@app.route("/api/hit", methods=["GET"])
+def hit():
+    socketio.emit('module_change', {"mydata": 12})
+
+    return Response("<p>You've hit me </p>", status=200)
+    
 
 @app.route("/")
 def index():

@@ -6,10 +6,10 @@
                 {{props.title}}
             </h2>
 
-            <UtillsYesNoButton v-model="model.present" />
+            <UtillsYesNoButton v-model="model.exist" />
         </div>
 
-        <slot v-if="model.present"/>
+        <slot v-if="model.exist"/>
     </div>
 </template>
 

@@ -22,7 +22,7 @@
 import type inputData from './types/inputData';
 import { defaultData } from './types/inputData';
 import type outputData from './types/outputData';
-
+import { io } from 'socket.io-client'
 
 // // State für UI
 const isLoading = ref(false);
@@ -78,9 +78,9 @@ const calculateSavings = async () => {
 
     try {
         const response = await fetch('http://localhost:5000/api/calculate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(inData.value)
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(inData.value)
         });
         const data = await response.json();
 
@@ -103,7 +103,46 @@ const calculateSavings = async () => {
     } finally {
         isLoading.value = false;
     }
+
 };
+
+// Reactive state variables
+const isConnected = ref(false)
+const serverMessage = ref('')
+let socket = null
+
+onMounted(() => {
+    socket = io('http://localhost:5000')
+
+    socket.on('connect', () => {
+        isConnected.value = true
+        console.log('Successfully connected to Flask server')
+    })
+
+    socket.on('disconnect', () => {
+        isConnected.value = false
+        console.log('Disconnected from Flask server')
+    })
+
+    socket.on('module_change', (payload) => {
+        console.log('Received from server:', payload)
+        serverMessage.value = payload.data
+    })
+})
+
+// Clean up the connection when the component is destroyed
+onBeforeUnmount(() => {
+    if (socket) {
+        socket.disconnect()
+    }
+})
+
+// Function to trigger a custom event back to Flask
+const sendMessageToFlask = () => {
+    if (socket && isConnected.value) {
+        socket.emit('client_message', { msg: 'Hello from the Nuxt frontend!' })
+    }
+}
 </script>
 
 <style>
