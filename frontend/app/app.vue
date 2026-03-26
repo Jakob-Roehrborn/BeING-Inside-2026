@@ -26,23 +26,23 @@ import type outputData from './types/outputData';
 
 // // State für UI
 const isLoading = ref(false);
-const results = ref(null);
+const results = ref();
 
 const inData = ref<inputData>({
-    household: {
+    general_info: {
 
     },
-    battery: {
-        present: false
+    memory: {
+        exists: false
     },
-    ev: {
-        present: false
+    ecar: {
+        exists: false
     },
-    pv: {
-        present: false
+    solar_system: {
+        exists: false
     },
     heat_pump: {
-        present: false
+        exists: false
     }
 })
 const outData = ref<outputData | undefined>()
@@ -65,7 +65,6 @@ function fill_unknown_with_default(data: inputData, default_data: inputData) {
 // Funktion, die das Backend aufruft (Dummy Implementation)
 const calculateSavings = async () => {
     fill_unknown_with_default(inData.value, defaultData)
-    // console.log(fill_unknown_with_default(inData.value))
 
     isLoading.value = true;
     results.value = null; // Alte Ergebnisse zurücksetzen
@@ -78,24 +77,25 @@ const calculateSavings = async () => {
     //   }
 
     try {
-        // === HIER WÜRDE DEIN ECHTER BACKEND CALL STEHEN ===
-        // const response = await fetch('https://dein-backend.api/v1/calculate', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(formData)
-        // });
-        // const data = await response.json();
+        const response = await fetch('http://localhost:5000/api/calculate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(inData.value)
+        });
+        const data = await response.json();
 
-        // Simulation der Backend-Ladezeit
-        await new Promise(resolve => setTimeout(resolve, 1800));
-        console.debug(inData.value)
-        // Ergebnisse formatieren und im State speichern
-        outData.value = {
-            oldCost: 15000,
-            newCost: 37,
-            savings: (15000 - 37),
-            avgNewPrice: (37 / 12)
-        };
+        // // Simulation der Backend-Ladezeit
+        // await new Promise(resolve => setTimeout(resolve, 1800));
+        // console.debug(inData.value)
+        // // Ergebnisse formatieren und im State speichern
+        // outData.value = {
+        //     oldCost: 15000,
+        //     newCost: 37,
+        //     savings: (15000 - 37),
+        //     avgNewPrice: (37 / 12)
+        // };
+
+        outData.value = data
 
     } catch (error) {
         console.error("Fehler bei der Berechnung", error);

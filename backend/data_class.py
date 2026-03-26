@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pydantic import BaseModel
 
 # ---- input Data ----
 
@@ -7,31 +8,23 @@ class Coordinates:
     latitude: float
     longitude: float
 
-@dataclass
-class GeneralInfo:
+class GeneralInfo(BaseModel):
     postal_code: str
-    city: str
-    coordinates: Coordinates
-    number_of_person: int
+    coordinates: Coordinates | None = None
     total_consumption: int
     eprice: float
 
-
-@dataclass
-class SolarSystem:
+class SolarSystem(BaseModel):
     exist: bool
     azimuth: int
     tilt: int
     capacity_kwp: float
-    area_sqm: float
 
-@dataclass
-class HeatPump:
+class HeatPump(BaseModel):
     exist: bool
     performance_kWh_year: int
 
-@dataclass
-class ECar:
+class ECar(BaseModel):
     exist: bool
     ziel_jahreskilometer: int
     verbrauch_kwh_pro_100km: float
@@ -39,23 +32,17 @@ class ECar:
     start_ladezeit : int
     akku_grosse : int
 
-@dataclass
-class Memory:
+class Memory(BaseModel):
     exist: bool
     capacity_kWh: float
 
-@dataclass
-class Metadata:
-    last_updated: str
 
-@dataclass
-class input_data:
+class input_data(BaseModel):
     general_info: GeneralInfo
     solar_system: SolarSystem
     heat_pump: HeatPump
     ecar: ECar
     memory: Memory
-    metadata: Metadata
 
 def input_to_class(data: dict) -> input_data:
     gen_dict = data["general_info"].copy()
@@ -66,13 +53,11 @@ def input_to_class(data: dict) -> input_data:
         heat_pump = HeatPump(**data["heat_pump"]),
         ecar = ECar(**data["ecar"]),
         memory = Memory(**data["memory"]),
-        metadata = Metadata(**data["metadata"])
     )
 
 # ----- output Data -----
 
-@dataclass
-class output_data:
+class output_data(BaseModel):
     netz_einspeisung_kwh: float
     netz_bezug_kwh: float
     gesamtkosten_euro: float

@@ -1,61 +1,71 @@
 export default interface inputData {
-    pv: PV,
-    ev: EV,
-    battery: Battery,
+    solar_system: SolarSystem,
+    ecar: ECar,
+    memory: Memory,
     heat_pump: HeatPump,
-    household: Household
-}
-// PLZ
-export interface PV {
-    present: boolean,
-    power: number,
-    direction: "North" | "East" | "South" | "West",
-    angle: number
+    general_info: GeneralInfo
 }
 
-export interface Battery {
-    present: boolean,
-    capacity: number
+export interface SolarSystem {
+    exist: boolean,
+    capacity_kwp: number,
+    azimuth: number,
+    tilt: number,
+    area_sqm: number,
 }
 
-export interface EV {
-    present: boolean,
-    milage: number,
-    has_wall_box: boolean,
+export interface Memory {
+    exist: boolean,
+    capacity_kWh: number
+}
+
+export interface ECar {
+    exist: boolean,
+    ziel_jahreskilometer: number,
+    verbrauch_kwh_pro_100km: number,
+    wallbox: boolean,
+    start_ladezeit: number,
+    akku_grosse: number,
 }
 
 export interface HeatPump {
-    present: boolean,
-    yearly_consumption: number
+    exist: boolean,
+    performance_kWh_year: number
 }
 
-export interface Household {
-    consumption: number,
-    zip_code: String,
+export interface GeneralInfo {
+    total_consumption: number,
+    postal_code: String,
+    eprice: number,
 }
 
 export const defaultData: inputData = {
-    pv: {
-        present: false,
-        power: 10, 
-        direction: "South",
-        angle: 35,
+    solar_system: {
+        exist: false,
+        capacity_kwp: 10, 
+        azimuth: 180,
+        tilt: 35,
+        area_sqm: 30,
     },
-    ev: {
-        present: false,
-        has_wall_box: false, 
-        milage: 13000
+    ecar: {
+        exist: false,
+        wallbox: false, 
+        ziel_jahreskilometer: 13000,
+        verbrauch_kwh_pro_100km: 14,
+        akku_grosse: 64,
+        start_ladezeit: 0
     },
-    battery: {
-        present: false,
-        capacity: 10
+    memory: {
+        exist: false,
+        capacity_kWh: 10
     },
     heat_pump: {
-        present: false,
-        yearly_consumption: 5000
+        exist: false,
+        performance_kWh_year: 5000
     },
-    household: {
-        consumption: 3200,
-        zip_code: "01067",
+    general_info: {
+        total_consumption: 3200,
+        postal_code: "01067",
+        eprice: 0.37,
     }
 }

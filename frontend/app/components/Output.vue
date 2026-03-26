@@ -21,7 +21,7 @@
                 <h3 class="text-sm font-medium text-green-800 uppercase tracking-wider mb-2">Mögliche Ersparnis pro
                     Jahr*</h3>
                 <div class="text-5xl font-extrabold text-green-900 leading-none">
-                    {{ props.results.savings }} <span class="text-4xl font-bold">€</span>
+                    {{ props.results.netz_einspeisung_kwh }} <span class="text-4xl font-bold">€</span>
                 </div>
             </div>
 
@@ -31,17 +31,17 @@
                     <div
                         class="flex justify-between items-center py-3 px-4 bg-slate-50 rounded-lg border border-slate-100">
                         <span class="text-slate-600">Bisherige Kosten (geschätzt):</span>
-                        <span class="font-semibold text-slate-900">{{ props.results.oldCost }} €</span>
+                        <span class="font-semibold text-slate-900">{{ props.results.netz_bezug_kwh }} €</span>
                     </div>
                     <div
                         class="flex justify-between items-center py-3 px-4 bg-blue-50 rounded-lg border border-blue-100">
                         <span class="text-blue-900 font-medium">Kosten Dynamischer Tarif:</span>
-                        <span class="font-bold text-green-700 text-lg">{{ props.results.newCost }} €</span>
+                        <span class="font-bold text-green-700 text-lg">{{ props.results.gesamtkosten_euro }} €</span>
                     </div>
                     <div
                         class="flex justify-between items-center py-3 px-4 bg-slate-50 rounded-lg border border-slate-100 text-sm">
                         <span class="text-slate-600">Effektiver Arbeitspreis neu:</span>
-                        <span class="font-medium text-slate-800">{{ props.results.avgNewPrice }} Ct/kWh</span>
+                        <span class="font-medium text-slate-800">{{ props.results.gesamtkosten_euro }} Ct/kWh</span>
                     </div>
                 </div>
             </div>

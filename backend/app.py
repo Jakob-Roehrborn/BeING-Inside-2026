@@ -1,8 +1,9 @@
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
-from dataclasses import dataclass, asdict
+from dataclasses import asdict
 from data_class import input_data
 from main import main_backend
+import user_json_new as js
 
 app = Flask(__name__)
 CORS(app)
@@ -15,7 +16,9 @@ def calculate():
         return make_response("Unable to parse json", 400)
 
     data = input_data(**json_data)
-    
+    js.update_config_from_api(data) # setzt die Koordinaten basierend auf der plz
+    js.save_user_data(data, 'user.json') # speichert die Änderung
+     
     output = main_backend(data)
     # print(output)
     return make_response(jsonify(asdict(output)), 200)

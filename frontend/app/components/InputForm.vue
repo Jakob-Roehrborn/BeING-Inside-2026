@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <Household v-model="data.household" />
+        <Household v-model="data.general_info" />
 
         <div class="my-12" />
 
@@ -20,10 +20,10 @@
         </h2>
 
 
-        <ModulesPV v-model="data.pv" />
-        <ModulesEV v-model="data.ev" />
+        <ModulesPV v-model="data.solar_system" />
+        <ModulesEV v-model="data.ecar" />
         <ModulesHeatPump v-model="data.heat_pump" />
-        <ModulesBattery v-model="data.battery" />
+        <ModulesBattery v-model="data.memory" />
 
         <div class="my-16" />
 

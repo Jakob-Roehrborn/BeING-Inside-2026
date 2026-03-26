@@ -1,6 +1,5 @@
 export default interface outputData {
-    oldCost: number,
-    newCost: number,
-    savings: number,
-    avgNewPrice: number,
+    netz_einspeisung_kwh: number
+    netz_bezug_kwh: number
+    gesamtkosten_euro: number
 }

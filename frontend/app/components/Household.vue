@@ -9,7 +9,7 @@
             </label>
 
             <div class="relative rounded-md shadow-sm">
-                <input v-model="model.zip_code" class="w-full px-4 py-3 text-lg styled-input" />
+                <input v-model="model.postal_code" class="w-full px-4 py-3 text-lg styled-input" />
             </div>
 
         </div>
@@ -17,7 +17,7 @@
         <div class="my-6" />
 
         <div class="flex flex-col items-center gap-4 bg-slate-50 p-4 rounded-xl">
-            <UtilsInput v-model="model.consumption" title="Geschätzter Jahresstromverbrauch" placeholder="4500"
+            <UtilsInput v-model="model.total_consumption" title="Geschätzter Jahresstromverbrauch" placeholder="4500"
                 unit="kWh/Jahr" :required="true" class="w-full" />
             <UtilPersonSlider class="w-full" v-model="people" />
         </div>
@@ -25,22 +25,22 @@
 </template>
 
 <script lang="ts" setup>
-import type { Household } from '~/types/inputData';
+import type { GeneralInfo } from '~/types/inputData';
 import UtilPersonSlider from './Utils/UtilPersonSlider.vue';
 
 const CONSUMPTION = [1500, 2500, 3200, 4000, 5000]
 
-const model = defineModel<Household>({ required: true })
+const model = defineModel<GeneralInfo>({ required: true })
 
 let ignore_slider = false
 
-watch(() => model.value.consumption, () => {
+watch(() => model.value.total_consumption, () => {
     console.log("WATCH")
     ignore_slider = true
     setTimeout(() => ignore_slider = false, 50)
     let new_people = 0
     for (let i = 0; i < CONSUMPTION.length; i++) {
-        if (model.value.consumption >= CONSUMPTION[i]!) {
+        if (model.value.total_consumption >= CONSUMPTION[i]!) {
             new_people = i
         }
     }
@@ -51,7 +51,7 @@ const people = ref(2)
 
 watch(people, () => {
     if (ignore_slider) return
-    model.value.consumption = CONSUMPTION[people.value]!
+    model.value.total_consumption = CONSUMPTION[people.value]!
 })
 
 </script>

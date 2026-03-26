@@ -25,10 +25,6 @@ def main_backend(input_user: input_data):
         
         return formatted_timestamps
 
-
-    js.update_config_from_api(input_user) # setzt die Koordinaten basierend auf der plz
-    js.save_user_data(input_user, 'user.json') # speichert die Änderung
-
     ecar_con = input_user.ecar.ziel_jahreskilometer * input_user.ecar.verbrauch_kwh_pro_100km /100
     heat_pump_con = input_user.heat_pump.performance_kWh_year
     df = pd.DataFrame()
