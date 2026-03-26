@@ -47,8 +47,7 @@ def plot_cost(df, spalten, tage = 365, start_tag = 0, glättung_stunden = 24, ti
                     yaxis_title = 'Kostenstand in Euro',
                     legend_title_text='Legende')
     
-    fig.write_html(r"diagrams\cost_diagram.html", include_plotlyjs='cdn')
-    fig.show()
+    fig.write_html(r"diagrams/cost_diagram.html", include_plotlyjs = 'directory') # 'cdn' benötigt Internet 
     return fig
 
 
@@ -64,14 +63,14 @@ def plot_grid_exchange(df, spalten, tage = 365, start_tag = 0, glättung_stunden
     if glättung_stunden > 1:
         df_subset = df_subset[spalten].resample(f"{glättung_stunden}h").mean()
     
-    namen_mapping = {'kosten_konstant': 'Fixer Tarif', 'kosten_dynamisch': 'Dynamischer Tarif'}
+    namen_mapping = {'netz_bezug': 'Netzbezug', 'netz_einspeisung': 'Netzeinspeisung'}
     df_subset = df_subset.rename(columns=namen_mapping)
     plot_spalten = [namen_mapping.get(c, c) for c in spalten]
     
     fig = px.line(
         df_subset, 
-        x=df_subset.index,  # Nutzt jetzt die echten Datums-Objekte
-        y=spalten,
+        x = df_subset.index,  # Nutzt jetzt die echten Datums-Objekte
+        y = plot_spalten,
         title= title,
         template='plotly_white' #"plotly_dark" # Dunkel: cyborg Hell: plotly, plotly_white, ggplot2 Einfach: seaborn, none
     )
@@ -91,11 +90,10 @@ def plot_grid_exchange(df, spalten, tage = 365, start_tag = 0, glättung_stunden
 
     fig.update_layout(hovermode="x unified", 
                     xaxis_title="Monat", 
-                    yaxis_title = 'kW',
+                    yaxis_title = 'kWh',
                     legend_title_text='Legende')
     
-    fig.write_html(r"diagrams\plot_grid_exchange.html", include_plotlyjs='cdn')
-    fig.show()
+    fig.write_html(r"diagrams/plot_grid_exchange.html", include_plotlyjs='directory') # 'cdn' benötigt Internet 
     return fig
 #if __name__ == '__main__':
 

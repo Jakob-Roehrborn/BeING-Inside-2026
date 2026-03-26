@@ -5,7 +5,7 @@
 import pandas as pd
 
 def household(smart = False):   
-    input_file = r'material\hausehold_smart.csv' if smart else r'material\hausehold_normal.csv'
+    input_file = r'material/hausehold_smart.csv' if smart else r'material/hausehold_normal.csv'
     df = pd.read_csv(input_file, sep=',', comment='#')
     return df[['return_value']]
 
@@ -13,15 +13,15 @@ def household(smart = False):
 def household_old(smart = False):   
 
     if smart:
-        input_file = r'material\household_smart_only.csv'
-        #input_file = r'material\hourly_el_family.csv'
+        input_file = r'material/household_smart_only.csv'
+        #input_file = r'material/hourly_el_family.csv'
         df = pd.read_csv(input_file, sep=',', comment='#')
         ist_jahresverbrauch = df['P_el'].sum()
         df['return_value'] = df['P_el'] / ist_jahresverbrauch
         df.to_csv('hausehold_smart.csv',index=False)
         return df[['return_value']]
     else:
-        input_file = r'material\synPRO_el_family.dat'
+        input_file = r'material/synPRO_el_family.dat'
         df = pd.read_csv(input_file, sep=';', comment='#')
         df['datetime'] = pd.to_datetime(df['unixtimestamp'], unit='s')
         df.set_index('datetime', inplace=True)
