@@ -39,6 +39,7 @@ class ECar:
     wallbox: bool
     start_ladezeit : int
     akku_grosse : int
+    anteil_zu_Hause : float
 
 @dataclass
 class Memory:
@@ -77,3 +78,6 @@ class output_data:
     netz_einspeisung_kwh: float
     netz_bezug_kwh: float
     gesamtkosten_euro: float
+    cost_modul_1: float
+    cost_modul_2: float
+    cost_modul_3: float

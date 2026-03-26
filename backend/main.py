@@ -1,18 +1,19 @@
 import pandas as pd
 import os
 
-from solar_base import generate_weather_master
-from solar_calculation import main_kwp_performance
+from solar_base import generate_weather_2025, generate_weather_master
+from solar_calculation import main_kwp_performance, main_kwp_performance_2025
 from heat_pump import heat_pump
 from haushalt_csv import household
-from Speicher_1 import speicher
-#from ploten import plot_auswertung
-#from debugprint import debugprints
+from Speicher import speicher
 import user_json_new as js
 from eauto2 import simuliere_e_auto_mit_soc
-from kosten_calc import berechne_stromkosten_nach_14a
+from kosten_calc2 import berechne_stromkosten_nach_14a_dynamisch
 from data_class import output_data
+from plotly_diagramme import plot_zeitreihe_optimiert
 
+from ploten import plot_auswertung
+from debugprint import debugprints
 def main_backend():
 
     def timestamp():
@@ -40,6 +41,8 @@ def main_backend():
         
         generate_weather_master(*location_user)
         df['solar'] = main_kwp_performance(input_user)
+        #generate_weather_2025(*location_user)
+        #df['solar'] = main_kwp_performance_2025(input_user)
         
     household_con_tot =  input_user.general_info.total_consumption
     if input_user.heat_pump.exist:
@@ -49,9 +52,15 @@ def main_backend():
     if input_user.ecar.exist:
         household_con_tot =  household_con_tot - ecar_con
         ladeleistung = 11 if input_user.ecar.wallbox else 2.7
-        df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit)
+        df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit, input_user.ecar.anteil_zu_Hause)
         
-    df['household'] = household(smart = input_user.general_info.smart)*household_con_tot
+    if   household_con_tot > 0 :
+        df['household'] = household(smart = input_user.general_info.smart)*household_con_tot
+        quatscheingabe = False
+    else : 
+        quatscheingabe = True
+        df['household'] = -household(smart = input_user.general_info.smart)*household_con_tot
+    
     df['total_consumption'] = (
         df['household'] + 
         df.get('heat_pump', 0) + 
@@ -89,30 +98,45 @@ def main_backend():
         df['netz_einspeisung'] = df['saldo'].clip(upper=0).abs()    
 
     # KWhJahr * Hausverbrauch + ele_car 
-    csv_path = "material\strompreise_2026_sachsenenergie.csv"
+    csv_path = r"material\strompreise_2026_sachsenenergie.csv"
     cols = ["customer_price_gross_ct_per_kwh_konzession_1_32"]
-    df_prices =pd.read_csv(csv_path, usecols=cols, sep=",")
-    df["ges_price"] =- df_prices[cols[0]]*df["netz_bezug"]/100+0.0778*df['netz_einspeisung']
+    #df_prices =pd.read_csv(csv_path, usecols=cols, sep=",")
+    df_prices =pd.read_csv(csv_path)
+    #df["ges_price"] =- df_prices[cols[0]]*df["netz_bezug"]/100 + 0.0778*df['netz_einspeisung']
 
-    berechne_stromkosten_nach_14a(df)
-    df.to_csv("test_df.csv", index=False)
+    df["ges_price"] =- df_prices["customer_price_gross_ct_per_kwh_konzession_1_32"]*df["netz_bezug"]/100+0.0778*df['netz_einspeisung']
+    #debugprints(df, input_user, quatscheingabe)
+    df_module = pd.DataFrame()
+    df_module = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
 
-    print('Haushalt:', (df["household"]).sum())
+    #plot_auswertung(df, input_user.memory.capacity_kWh, input_user)
+
+    #print('Haushalt:', (df["household"]).sum())
     print('Solar:', (df["solar"]).sum())
-    print('Netzeinspeisung:', (df["netz_einspeisung"]).sum())
-    print('Netzbezug:', (df["netz_bezug"]).sum())
-    print('Gesamtpreis:', (df['ges_price']).sum())
-    print('Gesamtverbrauch:', df['total_consumption'].min())
-   
+    # print('Netzeinspeisung:', (df["netz_einspeisung"]).sum())
+    # print('Netzbezug:', (df["netz_bezug"]).sum())
+    # print('Gesamtpreis:', (df['ges_price']).sum())
+    # print('Gesamtverbrauch:', df['total_consumption'].min())
+
+    #plot_zeitreihe_optimiert(df,['netz_bezug','netz_einspeisung'],glättung_stunden=24)
+    #df['kosten_konstant'] = (-(-input_user.general_info.eprice * df['netz_bezug'] + 0.0778 * df['netz_einspeisung'])).cumsum()
+    #print('netz_bezug:',(-input_user.general_info.eprice * df['netz_bezug']).sum(), 'netz_einspeisung', (0.0778 * df['netz_einspeisung']).sum())
+    #df['kosten_dynamisch'] = -df['ges_price'].cumsum()
+    #plot_zeitreihe_optimiert(df,['kosten_konstant','kosten_dynamisch'],glättung_stunden=24, title=f'Kosten konstant ({input_user.general_info.eprice*100} ct/kWh) vs. dynamisch')
+    #df.to_csv("test_df.csv", index=False)
+
     return output_data( # muss noch angepasst werden 
         netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),
         netz_bezug_kwh = (df["netz_bezug"]).sum(),
-        gesamtkosten_euro = (df['ges_price']).sum()
+        gesamtkosten_euro = (df['ges_price']).sum(),
+        cost_modul_1 = df_module['Modul1'].sum(),
+        cost_modul_2 = df_module['Modul2'].sum(),
+        cost_modul_3 = df_module['Modul3'].sum()
     ) 
 
 # prüft ob Wetterdaten für eine plz bereits vorhanden ist
 def weather_cvs_exists(plz):
-    filename = f"solar_base_{plz}_2020_2025.csv"
+    filename = f"solar_base_{plz}_2025.csv"
     file_path = os.path.join('solar_base', filename)
     if os.path.exists(file_path):
         return True

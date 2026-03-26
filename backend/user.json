@@ -8,7 +8,8 @@
         },
         "number_of_person": 4,
         "total_consumption": 7900,
-        "eprice": 0.37
+        "eprice": 0.4,
+        "smart": true
     },
     "solar_system": {
         "exist": true,
@@ -26,14 +27,15 @@
         "ziel_jahreskilometer": 15000,
         "verbrauch_kwh_pro_100km": 18.0,
         "wallbox": true,
-        "start_ladezeit": 17,
-        "akku_grosse": 50
+        "start_ladezeit": 19,
+        "akku_grosse": 50,
+        "anteil_zu_Hause": 0.8
     },
     "memory": {
         "exist": true,
         "capacity_kWh": 10.0
     },
     "metadata": {
-        "last_updated": "2026-03-25"
+        "last_updated": "2026-03-26"
     }
 }
