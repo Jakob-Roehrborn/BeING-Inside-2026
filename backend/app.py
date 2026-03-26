@@ -46,8 +46,8 @@ def calculate():
 @app.route("/api/module_change", methods=["POST"])
 def module_change():
     data_json = request.get_json()
-    print(data_json)
-    emit('module_change', data_json)
+    print("MODULE CHANGE: ", data_json)
+    socketio.emit('module_change', data_json)
 
     return make_response("Ok", 200)
 
