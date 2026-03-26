@@ -51,7 +51,6 @@ export const defaultData: inputData = {
     },
     ecar: {
         exist: false,
-        wallbox: false, 
         ziel_jahreskilometer: 13000,
         verbrauch_kwh_pro_100km: 14,
         akku_grosse: 64,
@@ -70,6 +69,5 @@ export const defaultData: inputData = {
         total_consumption: 3200,
         postal_code: "01067",
         eprice: 0.37,
-        smart: true,
     }
 }

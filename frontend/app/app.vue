@@ -32,13 +32,14 @@ const results = ref();
 
 const inData = ref<inputData>({
     general_info: {
-
+        smart: false
     },
     memory: {
         exist: false
     },
     ecar: {
-        exist: false
+        exist: false,
+        wallbox: false
     },
     solar_system: {
         exist: false

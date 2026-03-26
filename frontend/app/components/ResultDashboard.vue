@@ -18,7 +18,7 @@
             <p class="text-lg">Frage Backend-Daten ab...</p>
         </div>
 
-        <div v-else-if="results" class="space-y-10">
+        <div v-else-if="results" class="flex flex-col justify-around gap-4">
 
             <h4 class="text-lg font-semibold text-slate-800">Preisinformationen</h4>
             <div class="flex flex-row gap-8">
@@ -43,32 +43,49 @@
 
             </div>
 
+            <div class="my-3" />
+
             <!-- Sektion: Jährlicher Energieverbrauch -->
             <h4 class="text-lg font-semibold text-slate-800">Jährliche Energiebilanz</h4>
 
-            <div class="gap-3">
+            <div class="flex flex-col gap-4">
                 <ResultWindow title="Insgesamt ins Netz eingespeist" :value="results.netz_einspeisung_kwh" unit="kWh"
-                    class="bg-green-50!" />
+                    class="bg-green-50!  border-green-100!" />
                 <ResultWindow title="Insgesamt aus dem Netz bezogen" :value="results.netz_bezug_kwh" unit="kWh"
-                    class="bg-red-50!" />
-                <ResultWindow title="Haushalt" :value="results.household" unit="kWh" />
-                <ResultWindow title="Wärmepumpe" :value="results.heat_pump" unit="kWh" />
-                <ResultWindow title="Elektroauto" :value="results.ecar" unit="kWh" />
-                <ResultWindow title="PV Anlage" :value="results.solar" unit="kWh" />
+                    class="bg-red-50!  border-red-100!" />
+            </div>
+
+            <div class="flex flex-col gap-4 bg-slate-50 rounded-xl p-4 border-2 border-dashed border-slate-200">
+                <h4 class="font-semibold text-slate-800 w-full text-center">Zusammensetzung:</h4>
+                <ResultWindow title="PV-Anlage" :value="results.solar" unit="kWh"
+                    class="bg-green-50!  border-green-100!" />
+                <div class="flex flex-row justify-between gap-4">
+                    <ResultWindow title="Haushalt" :value="results.household" unit="kWh"
+                        class="bg-red-50! border-red-100! w-1/3" />
+                    <ResultWindow title="Wärmepumpe" :value="results.heat_pump" unit="kWh"
+                        class="bg-red-50!  border-red-100! w-1/3" />
+                    <ResultWindow title="Elektroauto" :value="results.ecar" unit="kWh"
+                        class="bg-red-50!  border-red-100! w-1/3" />
+                </div>
             </div>
 
             <div class="mt-2">
-                <ResultWindow title="Davon steuerbare Verbrauchsgeräte" :value="results.controllable_load" unit="kWh"
-                    class="bg-indigo-50! border-indigo-100!" />
+                <ResultWindow title="Insgesamt steuerbarer Verbrauch" :value="results.controllable_load" unit="kWh"
+                    class="border-indigo-400! border-2 " />
             </div>
+
+            <div class="my-3" />
 
             <!-- Sektion: EnWG Modul -->
             <div class="space-y-4">
-                <h4 class="text-lg font-semibold text-slate-800">EnWG Modul</h4>
+                <h4 class="text-lg font-semibold text-slate-800">Einsparung durch §14a EnWG Modul</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <ResultWindow title="Modul 1: Preis" :value="results.cost_modul_1" unit="€" />
-                    <ResultWindow title="Modul 2: Preis" :value="results.cost_modul_2" unit="€" />
-                    <ResultWindow title="Modul 3: Preis" :value="results.cost_modul_3" unit="€" />
+                    <ResultWindow title="Modul 1" :value="results.cost_modul_1" unit="€" class="outline-2"
+                        :class="best_module == 0 ? 'bg-green-50! outline-green-100' : 'outline-red-50'" />
+                    <ResultWindow title="Modul 2" :value="results.cost_modul_2" unit="€" class="outline-2"
+                        :class="best_module == 1 ? 'bg-green-50! outline-green-100' : 'outline-red-50'" />
+                    <ResultWindow title="Modul 3" :value="results.cost_modul_3" unit="€" class="outline-2"
+                        :class="best_module == 2 ? 'bg-green-50! outline-green-100' : 'outline-red-50'" />
                 </div>
             </div>
 
@@ -94,6 +111,13 @@
 import type outputData from '~/types/outputData';
 import ResultWindow from './ResultWindow.vue';
 
+const module_list = computed(() => {
+    return [props.results!.cost_modul_1, props.results!.cost_modul_2, props.results!.cost_modul_3]
+})
+
+const best_module = computed(() => {
+    return module_list.value.indexOf(Math.max(...module_list.value));
+})
 
 const props = defineProps<{
     isLoading: boolean,
