@@ -26,13 +26,13 @@ watch(() => model.value.consumption, () => {
     console.log("WATCH")
     ignore_slider = true
     setTimeout(()=>ignore_slider = false, 50)
+    let new_people = 0
     for (let i = 0; i < CONSUMPTION.length; i++) {
-        if (CONSUMPTION[i]! >= model.value.consumption) {
-            people.value = i
-            return;
+        if (model.value.consumption >= CONSUMPTION[i]!) {
+            new_people = i
         }
     }
-    people.value = CONSUMPTION.length
+    people.value = new_people
 })
 
 const people = ref(2)
