@@ -39,21 +39,27 @@ def main_backend(input_user: input_data):
                         input_user.general_info.coordinates.longitude, 
                         input_user.general_info.postal_code)
         
-        generate_weather_master(*location_user)
-        df['solar'] = main_kwp_performance(input_user)
-        #generate_weather_2025(*location_user)
-        #df['solar'] = main_kwp_performance_2025(input_user)
+        # generate_weather_master(*location_user)
+        # df['solar'] = main_kwp_performance(input_user)
+        generate_weather_2025(*location_user)
+        df['solar'] = main_kwp_performance_2025(input_user)
+    else:
+        df['solar'] = 0
         
     household_con_tot =  input_user.general_info.total_consumption
     if input_user.heat_pump.exist:
         df['heat_pump'] = heat_pump(input_user.heat_pump.performance_kWh_year)
         household_con_tot =  input_user.general_info.total_consumption - heat_pump_con
+    else:
+        df['heat_pump'] = 0
 
     if input_user.ecar.exist:
         household_con_tot =  household_con_tot - ecar_con
         ladeleistung = 11 if input_user.ecar.wallbox else 2.7
         df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit, input_user.ecar.anteil_zu_Hause)
-        
+    else:
+        df['ecar'] = 0      
+
     if   household_con_tot > 0 :
         df['household'] = household(smart = input_user.general_info.smart)*household_con_tot
         quatscheingabe = False
@@ -105,19 +111,23 @@ def main_backend(input_user: input_data):
     #df["ges_price"] =- df_prices[cols[0]]*df["netz_bezug"]/100 + 0.0778*df['netz_einspeisung']
 
     df["ges_price"] =- df_prices["customer_price_gross_ct_per_kwh_konzession_1_32"]*df["netz_bezug"]/100+0.0778*df['netz_einspeisung']
-    #debugprints(df, input_user, quatscheingabe)
+    
+    print('Netzbezug', df["netz_bezug"].sum())
+    print('Netzeinspeisung:', df['netz_einspeisung'].sum())
+
+
     df_module = pd.DataFrame()
     df_module, controllable_load = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
     df['kosten_konstant'] = (-(-input_user.general_info.eprice * df['netz_bezug'] + 0.0778 * df['netz_einspeisung'])).cumsum()
     df['kosten_dynamisch'] = -df['ges_price'].cumsum()
 
-    #plot_auswertung(df, input_user.memory.capacity_kWh, input_user)
+    df['cumsum_netz_bezug'] = df["netz_bezug"].cumsum()
+    df['cumsum_netz_einspeisung'] = df["netz_einspeisung"].cumsum()
 
-    #print('Haushalt:', (df["household"]).sum())
-    print('Solar:', (df["solar"]).sum())
-
+    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], glättung_stunden = 48+24, title = 'Einspeisung vs Netzbezug')
     pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], glättung_stunden = 24, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife')
     pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], glättung_stunden = 24, title = 'Einspeisung vs Netzbezug')
+
 
 
     return output_data( # muss noch angepasst werden 
