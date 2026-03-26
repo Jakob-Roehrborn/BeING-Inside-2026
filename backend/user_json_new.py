@@ -4,13 +4,13 @@ from geopy.geocoders import Nominatim
 # Importiere deine Klassen und die Umwandlungsfunktion
 from data_class import input_to_class, input_data 
 
-def load_user_data(json_file='user.json') -> input_data:
+def load_user_data(json_file = r"user.json") -> input_data:
     """Lädt die JSON und gibt ein EnergyData Objekt zurück."""
     with open(json_file, 'r', encoding='utf-8') as f:
         raw_data = json.load(f)
     return input_to_class(raw_data)
 
-def save_user_data(obj: input_data, json_file='user.json'):
+def save_user_data(obj: input_data, json_file=r'user.json'):
     # Verwandelt das Objekt und alle Unterobjekte zurück in ein Dict
     import dataclasses
     data_as_dict = dataclasses.asdict(obj)

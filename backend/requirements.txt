@@ -1,1 +1,7 @@
 Flask
+flask_cors
+requests
+geopy
+pandas
+pvlib
+matplotlib

@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+# ---- input Data ----
+
 @dataclass
 class Coordinates:
     latitude: float
@@ -12,6 +14,8 @@ class GeneralInfo:
     coordinates: Coordinates
     number_of_person: int
     total_consumption: int
+    eprice: float
+
 
 @dataclass
 class SolarSystem:
@@ -31,8 +35,9 @@ class ECar:
     exist: bool
     ziel_jahreskilometer: int
     verbrauch_kwh_pro_100km: float
-    max_leistung_kw: float
     wallbox: bool
+    start_ladezeit : int
+    akku_grosse : int
 
 @dataclass
 class Memory:
@@ -63,3 +68,11 @@ def input_to_class(data: dict) -> input_data:
         memory = Memory(**data["memory"]),
         metadata = Metadata(**data["metadata"])
     )
+
+# ----- output Data -----
+
+@dataclass
+class output_data:
+    netz_einspeisung_kwh: float
+    netz_bezug_kwh: float
+    gesamtkosten_euro: float
