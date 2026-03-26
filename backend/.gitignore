@@ -9,3 +9,4 @@ user.json
 diagrams/*
 # keep folder around!!! 
 !diagrams/.gitkeep
+!diagrams/plotly.min.js
