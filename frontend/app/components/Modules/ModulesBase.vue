@@ -14,13 +14,13 @@
 </template>
 
 <script lang="ts" setup>
-import type { PV, EV, Battery, HeatPump } from '~/types/inputData';
+import type { SolarSystem, ECar, Memory, HeatPump } from '~/types/inputData';
 import UtillsYesNoButton from '../Utils/UtillsYesNoButton.vue';
 
 const props = defineProps<{
     title: String
 }>()
 
-const model = defineModel<PV | EV | Battery | HeatPump>({ required: true })
+const model = defineModel<SolarSystem | ECar | Memory | HeatPump>({ required: true })
 
 </script>
