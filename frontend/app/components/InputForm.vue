@@ -12,7 +12,7 @@
 
         <Household v-model="data.household" />
 
-        <div class="my-12"/>
+        <div class="my-12" />
 
         <h2 class="text-2xl font-semibold text-slate-900 flex items-center gap-2 border-b-2 border-slate-100 pb-3">
             <span class="text-blue-500 font-mono text-xl"></span>
@@ -21,7 +21,7 @@
 
 
         <ModulesPV v-model="data.pv" />
-        <ModulesEV v-model="data.ev" class="" />
+        <ModulesEV v-model="data.ev" />
         <ModulesHeatPump v-model="data.heat_pump" />
         <ModulesBattery v-model="data.battery" />
 

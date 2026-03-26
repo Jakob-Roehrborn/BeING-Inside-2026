@@ -9,9 +9,7 @@
             <UtillsYesNoButton v-model="model.present" />
         </div>
 
-        <div v-if="model.present" class="space-y-6">
-            <slot />
-        </div>
+        <slot v-if="model.present"/>
     </div>
 </template>
 
