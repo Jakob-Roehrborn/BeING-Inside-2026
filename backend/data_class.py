@@ -13,6 +13,7 @@ class GeneralInfo(BaseModel):
     coordinates: Coordinates | None = None
     total_consumption: int
     eprice: float
+    smart: bool
 
 class SolarSystem(BaseModel):
     exist: bool
@@ -31,6 +32,7 @@ class ECar(BaseModel):
     wallbox: bool
     start_ladezeit : int
     akku_grosse : int
+    anteil_zu_Hause : float
 
 class Memory(BaseModel):
     exist: bool
@@ -60,4 +62,16 @@ def input_to_class(data: dict) -> input_data:
 class output_data(BaseModel):
     netz_einspeisung_kwh: float
     netz_bezug_kwh: float
-    gesamtkosten_euro: float
+    ecar: float
+    solar: float
+    household: float
+    heat_pump: float
+    controllable_load: float
+
+    cost_dynamic: float
+    cost_const: float
+    savings_dynamic: float
+
+    cost_modul_1: float
+    cost_modul_2: float
+    cost_modul_3: float

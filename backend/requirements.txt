@@ -7,3 +7,4 @@ pandas
 pvlib
 matplotlib
 pydantic
+plotly

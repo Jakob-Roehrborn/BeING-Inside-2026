@@ -80,3 +80,56 @@ def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
     print("-" * 30)
     print(f"FERTIG! Datei gespeichert: {file_path}")
     return master_df
+
+def generate_weather_2025(lat, lon, plz):
+    output_dir = r"solar_base"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        print(f"Ordner '{output_dir}' erstellt.")
+
+    filename = f"solar_base_{plz}_2025.csv"
+    file_path = os.path.join(output_dir, filename)
+    
+    if os.path.exists(file_path):
+        print(f"--- INFO: Datei {filename} existiert bereits. ---")
+        return pd.read_csv(file_path)
+
+    url = "https://archive-api.open-meteo.com/v1/archive"
+    params = {
+        "latitude": lat,
+        "longitude": lon,
+        "start_date": "2025-01-01",
+        "end_date": "2025-12-31",
+        "hourly": "shortwave_radiation,diffuse_radiation,direct_normal_irradiance,temperature_2m",
+        "timezone": "UTC"
+    }
+    try:
+        res = requests.get(url, params=params)
+        data = res.json()
+        
+        if 'hourly' in data:
+            h = data['hourly']
+            df = pd.DataFrame({
+                'time': pd.to_datetime(h.get('time')),
+                'ghi': h.get('shortwave_radiation'),
+                'dhi': h.get('diffuse_radiation'),
+                'dni': h.get('direct_normal_irradiance'),
+                'temp': h.get('temperature_2m')
+            })
+            
+            df['mm_dd_hh'] = df['time'].dt.strftime('%m-%d %H:00')
+            
+            final_df = df[['mm_dd_hh', 'ghi', 'dhi', 'dni', 'temp']].copy()
+            
+            final_df.to_csv(file_path, index=False)
+            print("-" * 30)
+            print(f"FERTIG! Daten für 2025 gespeichert: {file_path}")
+            return final_df
+        else:
+            print("Keine stündlichen Daten in der API-Antwort gefunden.")
+            
+    except Exception as e:
+        print(f"Fehler beim Abrufen der Daten: {e}")
+
+    return None
+

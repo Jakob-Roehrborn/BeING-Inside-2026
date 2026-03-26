@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 
-def simuliere_e_auto_mit_soc(kapazitaet_kwh, laufleistung_jahr_km, verbrauch_100km, max_ladeleistung_kw, start_ladezeit):
+def simuliere_e_auto_mit_soc(kapazitaet_kwh, laufleistung_jahr_km, verbrauch_100km, max_ladeleistung_kw, start_ladezeit, anteil_zu_Hause):
     start_datum = datetime(2024, 1, 1)
     stunden_jahr = 8760
     zeitstempel = [start_datum + timedelta(hours=i) for i in range(stunden_jahr)]
@@ -10,7 +10,9 @@ def simuliere_e_auto_mit_soc(kapazitaet_kwh, laufleistung_jahr_km, verbrauch_100
     last_profil = np.zeros(stunden_jahr)
     
     # Startzustand: Batterie ist zu Beginn voll
-    aktueller_soc_kwh = kapazitaet_kwh 
+    aktueller_soc_kwh = kapazitaet_kwh
+
+    laufleistung_jahr_km = laufleistung_jahr_km*anteil_zu_Hause
     
     # Tägliche Kilometer generieren (wie gehabt)
     np.random.seed(42)
