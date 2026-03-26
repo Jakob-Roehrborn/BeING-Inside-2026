@@ -23,3 +23,11 @@ dev-be:
 dev-fe:
     cd frontend && \
     npm run dev
+
+prod-be:
+    cd backend && \
+    gunicorn -b 0.0.0.0:8000 app:app
+
+prod-fe:
+    cd frontend && \
+    npm run prod
