@@ -1,14 +1,15 @@
 # Achtung mit kWh und Wh!!!
 # Personenanzahl wird aktuell nicht beachtet - Frontend
-# smart = True -> Ersparnis ca. 1.2379444826204349€
+# smart = True -> Ersparnis ca. 8€
 
 import pandas as pd
 
 def household(smart = False):   
     input_file = r'material/hausehold_smart.csv' if smart else r'material/hausehold_normal.csv'
-    print('input', input_file)
     df = pd.read_csv(input_file, sep=',', comment='#')
     return df[['return_value']]
+
+
 
 # ==== Alte =====
 def household_old(smart = False):   

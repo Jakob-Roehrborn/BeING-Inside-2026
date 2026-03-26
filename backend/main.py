@@ -10,9 +10,7 @@ import user_json_new as js
 from eauto2 import simuliere_e_auto_mit_soc
 from kosten_calc2 import berechne_stromkosten_nach_14a_dynamisch
 from data_class import output_data
-import plotly_diagramme as pt
-
-from plott_math import plot_household_year
+import plotly_diagramme2 as pt
 
 from not_use.ploten import plot_auswertung
 from debugprint import debugprints
@@ -115,9 +113,6 @@ def main_backend():
 
     df["ges_price"] =- df_prices["customer_price_gross_ct_per_kwh_konzession_1_32"]*df["netz_bezug"]/100+0.0778*df['netz_einspeisung']
     
-    print('Netzbezug', df["netz_bezug"].sum())
-    print('Netzeinspeisung:', df['netz_einspeisung'].sum())
-
 
     df_module = pd.DataFrame()
     df_module, controllable_load = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
@@ -127,10 +122,11 @@ def main_backend():
     df['cumsum_netz_bezug'] = df["netz_bezug"].cumsum()
     df['cumsum_netz_einspeisung'] = df["netz_einspeisung"].cumsum()
 
-    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], glättung_stunden = 48+24, title = 'Einspeisung vs Netzbezug')
-    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], glättung_stunden = 24, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife')
-    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], glättung_stunden = 24, title = 'Einspeisung vs Netzbezug')
+    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug')
+    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife')
+    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug')
 
+    df.to_csv('test_df.csv', index=False)
 
 
     return output_data( # muss noch angepasst werden 
