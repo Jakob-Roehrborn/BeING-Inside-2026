@@ -67,6 +67,7 @@ class output_data(BaseModel):
     household: float
     heat_pump: float
     controllable_load: float
+    eigenverbrauch_p: float
 
     cost_dynamic: float
     cost_const: float

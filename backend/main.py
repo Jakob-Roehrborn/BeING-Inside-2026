@@ -10,14 +10,10 @@ import user_json_new as js
 from eauto2 import simuliere_e_auto_mit_soc
 from kosten_calc2 import berechne_stromkosten_nach_14a_dynamisch
 from data_class import output_data
-import plotly_diagramme as pt
+import plotly_diagramme2 as pt
 
 from data_class import input_data
 
-from data_class import input_data
-
-from not_use.ploten import plot_auswertung
-from debugprint import debugprints
 
 def main_backend(input_user: input_data):
 
@@ -54,14 +50,16 @@ def main_backend(input_user: input_data):
         df['heat_pump'] = 0
 
     if input_user.ecar.exist:
-        household_con_tot =  household_con_tot - ecar_con
+        household_con_tot =  household_con_tot - ecar_con*input_user.ecar.anteil_zu_Hause
         ladeleistung = 11 if input_user.ecar.wallbox else 2.7
         df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit, input_user.ecar.anteil_zu_Hause)
+        
     else:
         df['ecar'] = 0      
 
     if   household_con_tot > 0 :
         df['household'] = household(smart = input_user.general_info.smart)*household_con_tot
+
         quatscheingabe = False
     else : 
         quatscheingabe = True
@@ -112,9 +110,6 @@ def main_backend(input_user: input_data):
 
     df["ges_price"] =- df_prices["customer_price_gross_ct_per_kwh_konzession_1_32"]*df["netz_bezug"]/100+0.0778*df['netz_einspeisung']
     
-    print('Netzbezug', df["netz_bezug"].sum())
-    print('Netzeinspeisung:', df['netz_einspeisung'].sum())
-
 
     df_module = pd.DataFrame()
     df_module, controllable_load = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
@@ -124,10 +119,11 @@ def main_backend(input_user: input_data):
     df['cumsum_netz_bezug'] = df["netz_bezug"].cumsum()
     df['cumsum_netz_einspeisung'] = df["netz_einspeisung"].cumsum()
 
-    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], glättung_stunden = 48+24, title = 'Einspeisung vs Netzbezug')
-    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], glättung_stunden = 24, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife')
-    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], glättung_stunden = 24, title = 'Einspeisung vs Netzbezug')
+    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug')
+    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife')
+    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug')
 
+    df.to_csv('test_df.csv', index=False)
 
 
     return output_data( # muss noch angepasst werden 
@@ -138,7 +134,8 @@ def main_backend(input_user: input_data):
         solar = df["solar"].sum(),
         household = df["household"].sum(),
         heat_pump = df['heat_pump'].sum(),
-        controllable_load = controllable_load, # Gesamtverbrauch ohne Haushalt Wird bei den Modulen beachtet
+        controllable_load = controllable_load, 
+        eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum()),
         
         cost_dynamic = df['kosten_dynamisch'].iat[-1], # zu bezahlen für den Kunden = positiv
         cost_const = df['kosten_konstant'].iat[-1],
@@ -146,7 +143,8 @@ def main_backend(input_user: input_data):
         
         cost_modul_1 = df_module['Modul1'].sum(),
         cost_modul_2 = df_module['Modul2'].sum(),
-        cost_modul_3 = df_module['Modul3'].sum()) 
+        cost_modul_3 = df_module['Modul3'].sum())
+        #eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum())
 
 # prüft ob Wetterdaten für eine plz bereits vorhanden ist
 def weather_cvs_exists(plz):
@@ -158,4 +156,9 @@ def weather_cvs_exists(plz):
 
 if __name__ == "__main__":
     main_backend()
+    # df = pd.DataFrame()
+    # x, df['smart'] = main_backend(smart=True, ladezeit=13)
+    # x, df['nicht'] = main_backend(smart=False, ladezeit=18)
+    # print('Smart', df['smart'].iat[-1], 'normal', df['nicht'].iat[-1], 'Ersparnis', df['nicht'].iat[-1]-df['smart'].iat[-1])
+    # plot_household_year(df)
 
