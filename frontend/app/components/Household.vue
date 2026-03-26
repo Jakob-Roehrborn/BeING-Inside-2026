@@ -21,6 +21,13 @@
         </div>
         
         <UtilsInput v-model="model.eprice" title="Bisheriger Stromtarif" placeholder="0.37" unit="€/kWh" />
+        
+        <div class="my-6"/>
+
+        <div class="flex flex-row justify-between">
+            <div class="text-sm font-medium text-slate-700 mb-1 pl-1.5 inline-flex items-center">Achten sie bewusst auf Ihren Stromverbrauch?</div>
+            <input v-model="model.smart" type="checkbox" class="mr-2 size-6 accent-sachsenrot">
+        </div>
     </div>
 </template>
 
