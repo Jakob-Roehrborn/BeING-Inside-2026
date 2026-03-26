@@ -12,7 +12,7 @@ from kosten_calc2 import berechne_stromkosten_nach_14a_dynamisch
 from data_class import output_data
 import plotly_diagramme as pt
 
-from ploten import plot_auswertung
+from not_use.ploten import plot_auswertung
 from debugprint import debugprints
 def main_backend():
 
@@ -98,7 +98,7 @@ def main_backend():
         df['netz_einspeisung'] = df['saldo'].clip(upper=0).abs()    
 
     # KWhJahr * Hausverbrauch + ele_car 
-    csv_path = r"material\strompreise_2026_sachsenenergie.csv"
+    csv_path = r"material/strompreise_2026_sachsenenergie.csv"
     cols = ["customer_price_gross_ct_per_kwh_konzession_1_32"]
     #df_prices =pd.read_csv(csv_path, usecols=cols, sep=",")
     df_prices =pd.read_csv(csv_path)

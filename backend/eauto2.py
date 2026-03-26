@@ -29,7 +29,7 @@ def simuliere_e_auto_mit_soc(kapazitaet_kwh, laufleistung_jahr_km, verbrauch_100
         aktueller_soc_kwh = max(0, aktueller_soc_kwh)
         
         # 2. LADEN: Start um 19:00 Uhr
-        start_stunde_index = tag * 24 + start_ladezeit
+        start_stunde_index = int(tag * 24 + start_ladezeit)
         
         # Wir laden nur so viel, wie bis zur Maximalkapazität fehlt
         lade_bedarf = kapazitaet_kwh - aktueller_soc_kwh
