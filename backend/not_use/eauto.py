@@ -12,7 +12,7 @@ def optimierte_ladesimulation(
         verbrauch_kwh_pro_100km = 18.0,
         max_leistung_kw = 11.0):
     
-    input_filepath = r'material\synPRO_emob_row_1_hh_1_ev_id_1_2Ay3060_high_urban_1_charging_1_flex.dat'
+    input_filepath = r'./material/synPRO_emob_row_1_hh_1_ev_id_1_2Ay3060_high_urban_1_charging_1_flex.dat'
     
     start_time = time.time()  # Für die Laufzeitmessung
     #print("Starte optimierte Datenverarbeitung...")

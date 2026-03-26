@@ -7,7 +7,7 @@ def load_data(csv_path, cols, separator=','):
 
 def heat_pump(performance_kWh_year):
 
-    data_path = r'material/f_d_h_2026.csv'
+    data_path = r'./material/f_d_h_2026.csv'
 
     df = load_data(
         data_path, 
