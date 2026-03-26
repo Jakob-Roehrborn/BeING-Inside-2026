@@ -53,7 +53,7 @@ def module_change():
 
 @app.route("/api/hit", methods=["GET"])
 def hit():
-    socketio.emit('module_change', {"mydata": 12})
+    socketio.emit('module_change', {"module": 1, "state": 1})
 
     return Response("<p>You've hit me </p>", status=200)
     

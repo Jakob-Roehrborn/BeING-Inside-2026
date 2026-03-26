@@ -19,6 +19,19 @@
 const yesSelected = ref(false)
 const noSelected = ref(true)
 
+const model = defineModel<boolean>({required: true})
+
+watch(model, (state) => {
+    if (state) {
+        yesSelected.value = true
+        noSelected.value = false
+    }
+    else {
+        yesSelected.value = false
+        noSelected.value = true
+    }
+})
+
 watch(yesSelected, (yes) => {
     if (yes) {
         noSelected.value = false
@@ -40,5 +53,4 @@ watch(noSelected, (no) => {
     }
 })
 
-const model = defineModel<boolean>({required: true})
 </script>

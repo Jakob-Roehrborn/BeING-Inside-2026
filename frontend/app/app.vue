@@ -126,6 +126,23 @@ onMounted(() => {
 
     socket.on('module_change', (payload) => {
         console.log('Received from server:', payload)
+        let module: number = payload["module"]
+        let state: boolean = Boolean(payload["state"])
+        // #Module = [PV, EV, WP, Batterie]
+        switch (module) {
+            case 0: {
+                inData.value.solar_system.exist = state
+            }
+            case 1: {
+                inData.value.ecar.exist = state
+            }
+            case 2: {
+                inData.value.heat_pump.exist = state
+            }
+            case 3: {
+                inData.value.memory.exist = state
+            }
+        }
         serverMessage.value = payload.data
     })
 })
