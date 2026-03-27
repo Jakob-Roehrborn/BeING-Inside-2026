@@ -30,7 +30,7 @@ class ECar(BaseModel):
     ziel_jahreskilometer: int
     verbrauch_kwh_pro_100km: float
     wallbox: bool
-    start_ladezeit : int
+    start_ladezeit : float
     akku_grosse : int
     anteil_zu_Hause : float
 

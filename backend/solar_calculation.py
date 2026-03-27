@@ -1,4 +1,7 @@
 # Quelle: https://www.photovoltaikforum.com/core/article/126-das-temperaturverhalten-von-pv-modulen/
+# pvlib: https://github.com/pvlib/pvlib-python
+
+import solar_base as solar_csv
 
 import pandas as pd
 import pvlib
@@ -84,10 +87,7 @@ def main_kwp_performance(user):
 
 # ---- nur für 2025 -----
 
-def calculate_tilted_irradiance_2025(csv_path, tilt, azimuth, lat, lon, year = 2025):
-
-    df = pd.read_csv(csv_path)
-    df = df.sort_values('mm_dd_hh')
+def calculate_tilted_irradiance_2025(df, tilt, azimuth, lat, lon, year = 2025):
 
     times = pd.to_datetime(f"{year}-" + df['mm_dd_hh'], format="%Y-%m-%d %H:%M")
     times_utc = times.dt.tz_localize('UTC')
@@ -114,7 +114,8 @@ def calculate_tilted_irradiance_2025(csv_path, tilt, azimuth, lat, lon, year = 2
     
     return df
 
-def performance_column_2025(df, kwp_anlage, efficiency = 0.85): # efficiency des Wechselrichter & Kabel
+# ---- NOCT-Modell ----
+def performance_NOCT(df, kwp_anlage, efficiency = 0.85): # efficiency des Wechselrichter & Kabel
 
     df_result = df.copy()
     gamma = -0.004  # Temperaturkoeffizient pro K
@@ -123,23 +124,55 @@ def performance_column_2025(df, kwp_anlage, efficiency = 0.85): # efficiency des
     t_cell = temp_air + (df_result['leistung_geneigt'] / 800) * 25 # Zelltemperatur Annahme NOCT = 45 °C.
     temp_factor = 1 + gamma * (t_cell - t_ref)
 
-    df_result['solar'] = (df_result['leistung_geneigt'] / 1000) * kwp_anlage * efficiency * temp_factor
-    # df_result['solar2'] = (df_result['leistung_geneigt'] / 1000) * kwp_anlage * efficiency # ohne Temperatureinfluss
-    #plot_data(df_result, ['solar','solar2'], title='Solar Temperatureinfluss')
-    
+    df_result['solar'] = (df_result['leistung_geneigt'] / 1000) * kwp_anlage * efficiency * temp_factor    
     df_result['solar'] = df_result['solar'].clip(lower=0) # keine negativen Werte
     df_reduced = df_result[['solar']]
     
     return df_reduced
 
-def main_kwp_performance_2025(user, year = 2025):
+# ---- Zelltemperatur mit pvlib ----
+# Beachtet den Wind bei der Zelltemperaturberechnung
+
+def performance_pvlib(df, kwp_anlage, efficiency=0.85):
+
+    # pvlib zur Zelltemperatur mit SAPM Modell
+    # freistehend -> open_rack_glass_polymer 
+    # dachintegriert -> insulated_back_glass_polymer
+    # Glas-Gals freistehend -> glass_glass_open_rack
+    # industrielle Montagesysteme -> open_rack_glass_steel
+
+    temp_params = pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS['sapm']['insulated_back_glass_polymer']
+    wind_speed = df['wind_speed'] # if 'wind_speed' in df.columns else 2
+    
+    t_cell = pvlib.temperature.sapm_cell(
+        poa_global=df['leistung_geneigt'],
+        temp_air=df['temp'],
+        wind_speed=wind_speed,
+        **temp_params
+    )
+    gamma = -0.004 # Temperaturkoeffizient
+    t_ref = 25
+    
+    temp_factor = 1 + gamma * (t_cell - t_ref)
+    p_dc = (df['leistung_geneigt'] / 1000) * kwp_anlage * temp_factor
+    df['solar'] = p_dc * efficiency # Wechselrichter-Verluste = efficiency
+    
+    return df[['solar']].clip(lower=0)
+
+def main_kwp_performance_2025(user, year = 2025, wind = True):
+
+    df = solar_csv.generate_weather_2025_windspeed(user.general_info.coordinates.latitude, 
+                    user.general_info.coordinates.longitude, 
+                    user.general_info.postal_code)
+    
     csv_path = os.path.join(r"solar_base", f"solar_base_{user.general_info.postal_code}_{year}.csv")
   
-    ergebnis_df = calculate_tilted_irradiance_2025(csv_path, 
+    ergebnis_df = calculate_tilted_irradiance_2025(df, 
                                             user.solar_system.tilt,
                                             user.solar_system.azimuth, 
                                             user.general_info.coordinates.latitude, 
                                             user.general_info.coordinates.longitude,
                                             year= year)
     
-    return performance_column_2025(ergebnis_df, user.solar_system.capacity_kwp)
+    return performance_pvlib(ergebnis_df, user.solar_system.capacity_kwp) if wind else performance_NOCT(ergebnis_df, user.solar_system.capacity_kwp)
+    #return performance_NOCT(ergebnis_df, user.solar_system.capacity_kwp) # ohne Beachtung des Windes

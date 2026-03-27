@@ -1,13 +1,18 @@
-# wichtig für png Generierung:  pip install kaleido==0.2.1
+# wichtig für png Generierung:  kaleido==0.2.1
 # erstellt Diagramme als html, png in Ordner diagrams
-# als png braucht sehr lange
+# als png zeitaufwendig
 # jeder plott eigene Funktion rolling_hours approx 24*7 Graphen schöner
 
 import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 
-pio.kaleido.scope.default_format = "png" # wichtig png Erstellung viel schneller -> Engine wird nicht jedes mal neu gestartet 
+#pio.kaleido.scope.default_format = "png" # wichtig png Erstellung viel schneller -> Engine wird nicht jedes mal neu gestartet
+
+# Werte für png
+SCALE = 1
+WIDTH = 1200
+HEIGHT = 600
 
 def plot_cost(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True, png = False):
 
@@ -55,9 +60,9 @@ def plot_cost(df, columns, days = 365, start_day = 0, rolling_hours = 24, title 
                     yaxis_title = 'Bilanz in Euro',
                     legend_title_text='Legende')
     
-    fig.write_html(r"diagrams/cost_diagram.html", include_plotlyjs = 'directory') # 'cdn' benötigt Internet 
+    fig.write_html(r"diagrams/cost_diagram.html", include_plotlyjs = 'directory') 
     if png:
-        fig.write_image(r"diagrams/cost_diagram.png", scale=2, width=1200, height=600) # wäre auch als pdf, svg möglich
+        fig.write_image(r"diagrams/cost_diagram.png", scale= SCALE, width=WIDTH, height=HEIGHT) 
     return fig
 
 def plot_grid_exchange(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True, png = False):
@@ -71,9 +76,9 @@ def plot_grid_exchange(df, columns, days = 365, start_day = 0, rolling_hours = 2
 
     if rolling_hours > 1:
         if rolling:
-            df_subset[columns] = df_subset[columns].rolling(window=rolling_hours, center=True, min_periods=1).mean() # nähert die Punkte an, Anzahl bleibt gleich -> schönere Kurve
+            df_subset[columns] = df_subset[columns].rolling(window=rolling_hours, center=True, min_periods=1).mean()
         else:
-            df_subset[columns] = df_subset[columns].resample(f"{rolling_hours}h").mean() # Fasst Punkte zu einem Punkt = Mittelwert an
+            df_subset[columns] = df_subset[columns].resample(f"{rolling_hours}h").mean() 
     
     
     namen_mapping = {'netz_bezug': 'Netzbezug', 'netz_einspeisung': 'Netzeinspeisung'}
@@ -85,12 +90,12 @@ def plot_grid_exchange(df, columns, days = 365, start_day = 0, rolling_hours = 2
         x = df_subset.index,
         y = plot_columns,
         title= title,
-        template='plotly_white' #"plotly_dark" # Dunkel: cyborg Hell: plotly, plotly_white, ggplot2 Einfach: seaborn, none
+        template='plotly_white' 
     )
 
     fig.update_xaxes(
-        dtick="M1",         # Zeige jeden 1. Monat 
-        tickformat="%b",    # Format: "Jan", "Feb" %B -> für ausgeschrieben
+        dtick="M1",         
+        tickformat="%b",   
         ticklabelmode="period"
     )
 
@@ -99,9 +104,9 @@ def plot_grid_exchange(df, columns, days = 365, start_day = 0, rolling_hours = 2
                     yaxis_title = 'kWh',
                     legend_title_text='Legende')
     
-    fig.write_html(r"diagrams/plot_grid_exchange.html", include_plotlyjs='directory') # 'cdn' benötigt Internet 
+    fig.write_html(r"diagrams/plot_grid_exchange.html", include_plotlyjs='directory') 
     if png:
-        fig.write_image(r"diagrams/plot_grid_exchange.png", scale=2, width=1200, height=600)
+        fig.write_image(r"diagrams/plot_grid_exchange.png", scale=SCALE, width=WIDTH, height=HEIGHT)
     return fig
 
 def plot_grid_exchange_cumsum(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True, png = False):
@@ -115,9 +120,9 @@ def plot_grid_exchange_cumsum(df, columns, days = 365, start_day = 0, rolling_ho
 
     if rolling_hours > 1:
         if rolling:
-            df_subset[columns] = df_subset[columns].rolling(window = rolling_hours, center = True, min_periods = 1).mean() # nähert die Punkte an, Anzahl bleibt gleich -> schönere Kurve
+            df_subset[columns] = df_subset[columns].rolling(window = rolling_hours, center = True, min_periods = 1).mean() 
         else:
-            df_subset[columns] = df_subset[columns].resample(f"{rolling_hours}h").mean() # Fasst Punkte zu einem Punkt = Mittelwert an
+            df_subset[columns] = df_subset[columns].resample(f"{rolling_hours}h").mean() 
     
     
     namen_mapping = {'cumsum_netz_bezug': 'Netzbezug', 'cumsum_netz_einspeisung': 'Netzeinspeisung'}
@@ -129,12 +134,12 @@ def plot_grid_exchange_cumsum(df, columns, days = 365, start_day = 0, rolling_ho
         x = df_subset.index, 
         y = plot_columns,
         title= title,
-        template='plotly_white' #"plotly_dark" # Dunkel: cyborg Hell: plotly, plotly_white, ggplot2 Einfach: seaborn, none
+        template='plotly_white'
     )
 
     fig.update_xaxes(
-        dtick="M1",         # Zeige jeden 1. Monat 
-        tickformat="%b",    # Format: "Jan", "Feb" %B -> für ausgeschrieben
+        dtick="M1",       
+        tickformat="%b",    
         ticklabelmode="period"
     )
 
@@ -143,9 +148,9 @@ def plot_grid_exchange_cumsum(df, columns, days = 365, start_day = 0, rolling_ho
                     yaxis_title = 'kWh',
                     legend_title_text='Legende')
     
-    fig.write_html(r"diagrams/plot_grid_exchange_cumsum.html", include_plotlyjs='directory') # 'cdn' benötigt Internet 
+    fig.write_html(r"diagrams/plot_grid_exchange_cumsum.html", include_plotlyjs='directory')
     if png:
-        fig.write_image(r"diagrams/plot_grid_exchange_cumsum.png", scale=2, width=1200, height=600)
+        fig.write_image(r"diagrams/plot_grid_exchange_cumsum.png", scale=SCALE, width=WIDTH, height=HEIGHT)
     return fig
 
 #if __name__ == '__main__':

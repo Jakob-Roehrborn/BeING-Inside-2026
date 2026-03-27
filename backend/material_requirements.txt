@@ -1,0 +1,5 @@
+f_d_h_2026.csv
+hausehold_normal.csv
+hausehold_smart.csv
+strompreise_2026_sachsenenergie.csv
+zusatzkosten_gesamt_2025_sachsennetze_sachsenenergie_stunden.csv

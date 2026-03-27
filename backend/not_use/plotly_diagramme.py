@@ -2,8 +2,7 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 
-
-def plot_cost(df, spalten, tage = 365, start_tag = 0, glättung_stunden = 24, title = 'Plott'):
+def plot_cost(df, spalten, tage = 365, start_tag = 0, glättung_stunden = 24, title = 'Plott', rolling = True):
 
     df = df.copy()
     df.index = pd.date_range(start="2024-01-01", periods=len(df), freq="h")
@@ -14,8 +13,11 @@ def plot_cost(df, spalten, tage = 365, start_tag = 0, glättung_stunden = 24, ti
     df_subset = df.loc[start_zeit:end_zeit].copy()
 
     if glättung_stunden > 1:
-        # Mittelwert = mean
-        df_subset = df_subset[spalten].resample(f"{glättung_stunden}h").mean()
+        if rolling:
+            df_subset[spalten] = df_subset[spalten].rolling(window=glättung_stunden, center=True, min_periods=1).mean() # nähert die Punkte an, Anzahl bleibt gleich -> schönere Kurve
+        else:
+            df_subset = df_subset[spalten].resample(f"{glättung_stunden}h").mean() # Fasst Punkte zu einem Punkt = Mittelwert an
+    
     
     namen_mapping = {'kosten_konstant': 'Fixer Tarif', 'kosten_dynamisch': 'Dynamischer Tarif'}
     df_subset = df_subset.rename(columns=namen_mapping)
