@@ -135,7 +135,7 @@ const props = defineProps<{
 
 function open_diagram(n: number) {
     const DIAGRAMS = ["cost_diagram.html", "plot_grid_exchange.html", "plot_grid_exchange_cumsum.html"]
-    window.location.href = `http://localhost:5000/api/diagrams/${DIAGRAMS[n]}`
+    window.open(`http://localhost:5000/api/diagrams/${DIAGRAMS[n]}`, '_blank');
 }
 
 </script>
