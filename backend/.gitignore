@@ -2,9 +2,6 @@
 *.csv
 *.parquet
 *.pyc
-*.html
-*.json
-*.js
 
 .venv/
 user.json

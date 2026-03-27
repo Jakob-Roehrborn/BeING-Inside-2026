@@ -7,7 +7,9 @@ import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 
-pio.kaleido.scope.default_format = "png" # wichtig png Erstellung viel schneller -> Engine wird nicht jedes mal neu gestartet 
+pio.kaleido.scope.default_format = "png" # wichtig png Erstellung viel schneller -> Engine wird nicht jedes mal neu gestartet
+
+SCALE = 1
 
 def plot_cost(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True, png = False):
 
@@ -57,7 +59,7 @@ def plot_cost(df, columns, days = 365, start_day = 0, rolling_hours = 24, title 
     
     fig.write_html(r"diagrams/cost_diagram.html", include_plotlyjs = 'directory') # 'cdn' benötigt Internet 
     if png:
-        fig.write_image(r"diagrams/cost_diagram.png", scale=2, width=1200, height=600) # wäre auch als pdf, svg möglich
+        fig.write_image(r"diagrams/cost_diagram.png", scale= SCALE, width=1200, height=600) # wäre auch als pdf, svg möglich
     return fig
 
 def plot_grid_exchange(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True, png = False):
@@ -101,7 +103,7 @@ def plot_grid_exchange(df, columns, days = 365, start_day = 0, rolling_hours = 2
     
     fig.write_html(r"diagrams/plot_grid_exchange.html", include_plotlyjs='directory') # 'cdn' benötigt Internet 
     if png:
-        fig.write_image(r"diagrams/plot_grid_exchange.png", scale=2, width=1200, height=600)
+        fig.write_image(r"diagrams/plot_grid_exchange.png", scale=SCALE, width=1200, height=600)
     return fig
 
 def plot_grid_exchange_cumsum(df, columns, days = 365, start_day = 0, rolling_hours = 24, title = 'Plott', rolling = True, png = False):
@@ -145,7 +147,7 @@ def plot_grid_exchange_cumsum(df, columns, days = 365, start_day = 0, rolling_ho
     
     fig.write_html(r"diagrams/plot_grid_exchange_cumsum.html", include_plotlyjs='directory') # 'cdn' benötigt Internet 
     if png:
-        fig.write_image(r"diagrams/plot_grid_exchange_cumsum.png", scale=2, width=1200, height=600)
+        fig.write_image(r"diagrams/plot_grid_exchange_cumsum.png", scale=SCALE, width=1200, height=600)
     return fig
 
 #if __name__ == '__main__':

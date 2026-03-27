@@ -119,9 +119,9 @@ def main_backend(input_user: input_data):
     df['cumsum_netz_bezug'] = df["netz_bezug"].cumsum()
     df['cumsum_netz_einspeisung'] = df["netz_einspeisung"].cumsum()
 
-    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug')
-    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife')
-    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug')
+    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = True)
+    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife', png = True)
+    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = True)
 
     df.to_csv('test_df.csv', index=False)
 
@@ -155,7 +155,8 @@ def weather_cvs_exists(plz):
     return False
 
 if __name__ == "__main__":
-    main_backend()
+    input_user = js.load_user_data()
+    main_backend(input_user)
     # df = pd.DataFrame()
     # x, df['smart'] = main_backend(smart=True, ladezeit=13)
     # x, df['nicht'] = main_backend(smart=False, ladezeit=18)
