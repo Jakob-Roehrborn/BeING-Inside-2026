@@ -76,3 +76,6 @@ class output_data(BaseModel):
     cost_modul_1: float
     cost_modul_2: float
     cost_modul_3: float
+
+    guenstig_m: int
+    ersparnis:float
