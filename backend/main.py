@@ -108,7 +108,14 @@ def main_backend(input_user: input_data):
     pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = png)
 
     print('Solar:', df['solar'].sum())
-
+    basisgrundpreis = 70.44  
+    grundpreis_netz = 30.00  
+    messstelle_imsys = 42.02
+    messstelle_mMe = 21.01
+    if input_user.solar_system.exist :
+        eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum())
+    else :
+        eigenverbrauch_p = 0
     return output_data( # muss noch angepasst werden 
         netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),
         netz_bezug_kwh = (df["netz_bezug"]).sum(),
@@ -118,10 +125,10 @@ def main_backend(input_user: input_data):
         household = df["household"].sum(),
         heat_pump = df['heat_pump'].sum(),
         controllable_load = controllable_load, 
-        eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum()),
+        eigenverbrauch_p = eigenverbrauch_p,
         
-        cost_dynamic = df['kosten_dynamisch'].iat[-1], # zu bezahlen für den Kunden = positiv
-        cost_const = df['kosten_konstant'].iat[-1],
+        cost_dynamic = df['kosten_dynamisch'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_imsys, # zu bezahlen für den Kunden = positiv
+        cost_const = df['kosten_konstant'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_mMe,
         savings_dynamic = df['kosten_konstant'].iat[-1] - df['kosten_dynamisch'].iat[-1], # Ersparnis mit flexiblem Strompreis
         
         cost_modul_1 = df_module['Modul1'].sum(),
