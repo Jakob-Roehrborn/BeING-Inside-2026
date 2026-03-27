@@ -1,10 +1,12 @@
 *.png
-*.csv
 *.parquet
 *.pyc
 
 .venv/
 user.json
+
+model.csv
+test_df.csv
 
 diagrams/*
 # keep folder around!!! 
