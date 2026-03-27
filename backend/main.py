@@ -120,7 +120,7 @@ def main_backend(input_user: input_data):
     df['cumsum_netz_einspeisung'] = df["netz_einspeisung"].cumsum()
 
     pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = True)
-    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife', png = True)
+    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Fixer Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife', png = True)
     pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = True)
 
     df.to_csv('test_df.csv', index=False)
