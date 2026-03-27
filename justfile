@@ -18,6 +18,7 @@ dev:
 
 dev-be:
     cd backend && \
+    . .venv/bin/activate && \
     python3 -m flask run --host 0.0.0.0
 
 dev-fe:
@@ -26,7 +27,8 @@ dev-fe:
 
 prod-be:
     cd backend && \
-    gunicorn -b 127.0.0.1:5000 app:app
+    . .venv/bin/activate && \
+    nohup gunicorn -b 127.0.0.1:5000 app:app > fe.log 2>&1 &
 
 prod-fe:
     cd frontend && \
