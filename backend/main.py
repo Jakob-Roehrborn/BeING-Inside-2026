@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 
-from solar_base import generate_weather_2025, generate_weather_master
 from solar_calculation import main_kwp_performance, main_kwp_performance_2025
 from heat_pump import heat_pump
 from haushalt_csv import household
@@ -25,8 +24,6 @@ def main_backend(input_user: input_data):
         
         return formatted_timestamps
 
-    ecar_con = input_user.ecar.ziel_jahreskilometer * input_user.ecar.verbrauch_kwh_pro_100km /100
-    heat_pump_con = input_user.heat_pump.performance_kWh_year
     df = pd.DataFrame()
     df['timestamp'] = timestamp()
 
@@ -35,36 +32,22 @@ def main_backend(input_user: input_data):
                         input_user.general_info.coordinates.longitude, 
                         input_user.general_info.postal_code)
         
-        # generate_weather_master(*location_user)
-        # df['solar'] = main_kwp_performance(input_user)
-        generate_weather_2025(*location_user)
         df['solar'] = main_kwp_performance_2025(input_user)
     else:
         df['solar'] = 0
         
-    household_con_tot =  input_user.general_info.total_consumption
     if input_user.heat_pump.exist:
         df['heat_pump'] = heat_pump(input_user.heat_pump.performance_kWh_year)
-        household_con_tot =  input_user.general_info.total_consumption - heat_pump_con
     else:
         df['heat_pump'] = 0
 
     if input_user.ecar.exist:
-        household_con_tot =  household_con_tot - ecar_con*input_user.ecar.anteil_zu_Hause
         ladeleistung = 11 if input_user.ecar.wallbox else 2.7
         df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit, input_user.ecar.anteil_zu_Hause)
-        
     else:
-        df['ecar'] = 0      
-
-    if   household_con_tot > 0 :
-        df['household'] = household(smart = input_user.general_info.smart)*household_con_tot
-
-        quatscheingabe = False
-    else : 
-        quatscheingabe = True
-        df['household'] = -household(smart = input_user.general_info.smart)*household_con_tot
-    
+        df['ecar'] = 0
+        
+    df['household'] = household()*input_user.general_info.total_consumption      
     df['total_consumption'] = (
         df['household'] + 
         df.get('heat_pump', 0) + 
@@ -119,12 +102,12 @@ def main_backend(input_user: input_data):
     df['cumsum_netz_bezug'] = df["netz_bezug"].cumsum()
     df['cumsum_netz_einspeisung'] = df["netz_einspeisung"].cumsum()
 
-    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug')
-    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Konstanter Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife')
-    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug')
+    png = False
+    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = png)
+    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Fixer Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife', png = png)
+    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = png)
 
-    df.to_csv('test_df.csv', index=False)
-
+    print('Solar:', df['solar'].sum())
 
     return output_data( # muss noch angepasst werden 
         netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),
@@ -155,7 +138,8 @@ def weather_cvs_exists(plz):
     return False
 
 if __name__ == "__main__":
-    main_backend()
+    input_user = js.load_user_data()
+    main_backend(input_user)
     # df = pd.DataFrame()
     # x, df['smart'] = main_backend(smart=True, ladezeit=13)
     # x, df['nicht'] = main_backend(smart=False, ladezeit=18)

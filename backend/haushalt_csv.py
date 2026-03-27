@@ -1,4 +1,3 @@
-# Achtung mit kWh und Wh!!!
 # Personenanzahl wird aktuell nicht beachtet - Frontend
 # smart = True -> Ersparnis ca. 8€
 
@@ -11,7 +10,7 @@ def household(smart = False):
 
 
 
-# ==== Alte =====
+# ==== Alte Version =====
 def household_old(smart = False):   
 
     if smart:

@@ -5,19 +5,16 @@ from geopy.geocoders import Nominatim
 from data_class import input_to_class, input_data, Coordinates
 
 def load_user_data(json_file = r"user.json") -> input_data:
-    """Lädt die JSON und gibt ein EnergyData Objekt zurück."""
     with open(json_file, 'r', encoding='utf-8') as f:
         raw_data = json.load(f)
     return input_to_class(raw_data)
 
 def save_user_data(obj: input_data, json_file=r'user.json'):
-    # Verwandelt das Objekt und alle Unterobjekte zurück in ein Dict
     data_as_dict = obj.model_dump()
     with open(json_file, 'w', encoding='utf-8') as f:
         json.dump(data_as_dict, f, indent=4)
 
 def update_config_from_api(user_obj: input_data):
-    """Aktualisiert Koordinaten direkt im Objekt."""
     plz = user_obj.general_info.postal_code
     
     if plz:
