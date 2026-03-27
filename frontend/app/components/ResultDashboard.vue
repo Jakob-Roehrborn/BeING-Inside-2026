@@ -29,7 +29,7 @@
 
                 <!-- <ResultWindow title="Ersparte Kosten mit dem dynamischen Tarif" :value="results.savings_dynamic" unit="€" class="bg-green-50! text-3xl!"/> -->
                 <div
-                    class="flex flex-col w-1/2  border justify-betwee rounded-xl p-4 text-center shadow-inner"
+                    class="flex flex-col w-1/2 border justify-between rounded-xl p-4 text-center shadow-inner"
                     :class="results.savings_dynamic > 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'">
                     <h3 class="text-sm font-medium text-green-800 uppercase">
                         Insgesamt erspart
