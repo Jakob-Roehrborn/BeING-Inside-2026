@@ -152,7 +152,9 @@ def generate_weather_2025_windspeed(lat, lon, plz):
     
     if os.path.exists(file_path):
         print(f"--- INFO: Datei {filename} existiert bereits. ---")
-        return pd.read_csv(file_path)
+        df = pd.read_csv(file_path)
+        df = df.sort_values('mm_dd_hh')
+        return df
 
     url = "https://archive-api.open-meteo.com/v1/archive"
     

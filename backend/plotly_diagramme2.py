@@ -7,7 +7,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 
-pio.kaleido.scope.default_format = "png" # wichtig png Erstellung viel schneller -> Engine wird nicht jedes mal neu gestartet
+#pio.kaleido.scope.default_format = "png" # wichtig png Erstellung viel schneller -> Engine wird nicht jedes mal neu gestartet
 
 # Werte für png
 SCALE = 1

@@ -24,8 +24,6 @@ def main_backend(input_user: input_data):
         
         return formatted_timestamps
 
-    ecar_con = input_user.ecar.ziel_jahreskilometer * input_user.ecar.verbrauch_kwh_pro_100km /100
-    heat_pump_con = input_user.heat_pump.performance_kWh_year
     df = pd.DataFrame()
     df['timestamp'] = timestamp()
 
@@ -38,29 +36,18 @@ def main_backend(input_user: input_data):
     else:
         df['solar'] = 0
         
-    household_con_tot =  input_user.general_info.total_consumption
     if input_user.heat_pump.exist:
         df['heat_pump'] = heat_pump(input_user.heat_pump.performance_kWh_year)
-        household_con_tot =  input_user.general_info.total_consumption - heat_pump_con
     else:
         df['heat_pump'] = 0
 
     if input_user.ecar.exist:
-        household_con_tot =  household_con_tot - ecar_con*input_user.ecar.anteil_zu_Hause
         ladeleistung = 11 if input_user.ecar.wallbox else 2.7
         df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit, input_user.ecar.anteil_zu_Hause)
-        
     else:
-        df['ecar'] = 0      
-
-    if   household_con_tot > 0 :
-        df['household'] = household(smart = input_user.general_info.smart)*household_con_tot
-
-        quatscheingabe = False
-    else : 
-        quatscheingabe = True
-        df['household'] = -household(smart = input_user.general_info.smart)*household_con_tot
-    
+        df['ecar'] = 0
+        
+    df['household'] = household()*input_user.general_info.total_consumption      
     df['total_consumption'] = (
         df['household'] + 
         df.get('heat_pump', 0) + 
