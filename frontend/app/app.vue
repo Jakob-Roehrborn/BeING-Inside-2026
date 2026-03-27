@@ -80,7 +80,7 @@ const calculateSavings = async () => {
     //   }
 
     try {
-        const response = await fetch('http://localhost:5000/api/calculate', {
+        const response = await fetch('http://being-inside.duckdns.org/api/calculate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(inData.value)
@@ -109,63 +109,64 @@ const calculateSavings = async () => {
 
 };
 
+// disable on prod
 // Reactive state variables
-const isConnected = ref(false)
-let socket = null
+// const isConnected = ref(false)
+// let socket = null
 
-onMounted(() => {
-    socket = io('http://localhost:5000')
+// onMounted(() => {
+//     socket = io('http://localhost:5000')
 
-    socket.on('connect', () => {
-        isConnected.value = true
-        console.log('Successfully connected to Flask server')
-    })
+//     socket.on('connect', () => {
+//         isConnected.value = true
+//         console.log('Successfully connected to Flask server')
+//     })
 
-    socket.on('disconnect', () => {
-        isConnected.value = false
-        console.log('Disconnected from Flask server')
-    })
+//     socket.on('disconnect', () => {
+//         isConnected.value = false
+//         console.log('Disconnected from Flask server')
+//     })
 
-    socket.on('module_change', (payload) => {
-        console.log('Received from server:', payload)
-        let module: number = payload["module"]
-        let state: boolean = Boolean(payload["state"])
-        console.log('mod', module, "state", state)
-        // #Module = [PV, EV, WP, Batterie]
-        switch (module) {
-            case 0: {
-                inData.value.solar_system.exist = state
-                break
-            }
-            case 1: {
-                inData.value.ecar.exist = state
-                break
-            }
-            case 2: {
-                inData.value.heat_pump.exist = state
-                break
-            }
-            case 3: {
-                inData.value.memory.exist = state
-                break
-            }
-        }
-    })
-})
+//     socket.on('module_change', (payload) => {
+//         console.log('Received from server:', payload)
+//         let module: number = payload["module"]
+//         let state: boolean = Boolean(payload["state"])
+//         console.log('mod', module, "state", state)
+//         // #Module = [PV, EV, WP, Batterie]
+//         switch (module) {
+//             case 0: {
+//                 inData.value.solar_system.exist = state
+//                 break
+//             }
+//             case 1: {
+//                 inData.value.ecar.exist = state
+//                 break
+//             }
+//             case 2: {
+//                 inData.value.heat_pump.exist = state
+//                 break
+//             }
+//             case 3: {
+//                 inData.value.memory.exist = state
+//                 break
+//             }
+//         }
+//     })
+// })
 
-// Clean up the connection when the component is destroyed
-onBeforeUnmount(() => {
-    if (socket) {
-        socket.disconnect()
-    }
-})
+// // Clean up the connection when the component is destroyed
+// onBeforeUnmount(() => {
+//     if (socket) {
+//         socket.disconnect()
+//     }
+// })
 
-// Function to trigger a custom event back to Flask
-const sendMessageToFlask = () => {
-    if (socket && isConnected.value) {
-        socket.emit('client_message', { msg: 'Hello from the Nuxt frontend!' })
-    }
-}
+// // Function to trigger a custom event back to Flask
+// const sendMessageToFlask = () => {
+//     if (socket && isConnected.value) {
+//         socket.emit('client_message', { msg: 'Hello from the Nuxt frontend!' })
+//     }
+// }
 </script>
 
 <style>
