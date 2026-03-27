@@ -15,7 +15,7 @@
         </div>
              
         <div class="flex flex-col items-center gap-4 bg-slate-50 p-4 rounded-xl my-8">
-            <UtilsInput v-model="model.total_consumption" title="Geschätzter Jahresstromverbrauch" placeholder="4500"
+            <UtilsInput v-model="model.total_consumption" title="Haushaltsstromverbrauch" placeholder="4500"
             unit="kWh/Jahr" :required="true" class="w-full" />
             <UtilPersonSlider class="w-full" v-model="people" />
         </div>
