@@ -1,6 +1,6 @@
-# wichtig für png Generierung:  pip install kaleido==0.2.1
+# wichtig für png Generierung:  kaleido==0.2.1
 # erstellt Diagramme als html, png in Ordner diagrams
-# als png braucht sehr lange
+# als png zeitaufwendig
 # jeder plott eigene Funktion rolling_hours approx 24*7 Graphen schöner
 
 import pandas as pd

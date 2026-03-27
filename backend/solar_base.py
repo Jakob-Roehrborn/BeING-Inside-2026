@@ -1,13 +1,16 @@
-# Erstellt csv-Datein mit Wetterdaten für die Berechnung der Solarzelle
+# Erstellt csv-Datein mit Wetterdaten für die Berechnung der Solarzelle basierend auf den Koordinaten (Plz)
 # Form: mm_dd_hh,ghi_mean,ghi_min,ghi_max,dhi_mean,dhi_min,dhi_max,dni_mean,dni_min,dni_max, tem_mean
 # mean: Durchschnitt, min: worst-case, max: best-case
 # existiert bereits eine dementsprechende csv-Datei -> keine Neuberechnung
 # Quelle der Daten: https://open-meteo.com/
+# auf Rat der Experten wird nur noch ein Jahr beachtet (2025)
 
 import requests
 import pandas as pd
 import time
 import os
+
+# ---- Berechnung Durchschnittswerte basierend auf mehreren Jahren ----
 
 def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
 
@@ -33,7 +36,7 @@ def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
             "start_date": f"{year}-01-01",
             "end_date": f"{year}-12-31",
             "hourly": "shortwave_radiation,diffuse_radiation,direct_normal_irradiance,temperature_2m",
-            "timezone": "UTC" # UTC verhindert DST-Probleme (Sommerzeit)
+            "timezone": "UTC" # UTC verhindert DST-Probleme
         }
         
         try:
@@ -80,6 +83,8 @@ def generate_weather_master(lat, lon, plz, start_year=2020, end_year=2025):
     print("-" * 30)
     print(f"FERTIG! Datei gespeichert: {file_path}")
     return master_df
+
+# ---- Wetterdaten für ein Jahr laden ----
 
 def generate_weather_2025(lat, lon, plz):
     output_dir = r"solar_base"

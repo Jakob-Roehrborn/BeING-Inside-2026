@@ -1,4 +1,5 @@
 # Quelle: https://www.photovoltaikforum.com/core/article/126-das-temperaturverhalten-von-pv-modulen/
+# pvlib: https://github.com/pvlib/pvlib-python
 
 import pandas as pd
 import pvlib
