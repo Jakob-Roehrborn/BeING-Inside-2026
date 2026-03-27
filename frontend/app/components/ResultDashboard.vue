@@ -34,10 +34,10 @@
                     <h3 class="text-sm font-medium text-green-800 uppercase">
                         Insgesamt erspart
                     </h3>
-                    <div class="text-lg md:text-5xl font-extrabold text-green-900 leading-none">
+                    <div class="text-lg md:text-5xl font-extrabold leading-none" :class="results.savings_dynamic > 0 ? 'text-green-900' : 'text-red-900'">
                         {{ results.savings_dynamic.toFixed(2) }} €
                     </div>
-                    <h3 class="text-sm font-medium text-green-800 uppercase">
+                    <h3 class="text-sm font-medium uppercase" :class="results.savings_dynamic > 0 ? 'text-green-900' : 'text-red-900'" >
                         mit dem dynamischen Tarif
                     </h3>
                 </div>
