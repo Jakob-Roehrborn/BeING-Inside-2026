@@ -2,7 +2,7 @@
     <ModulesBase title="Haben Sie eine PV-Anlage?" v-model="model">
         <div class="flex flex-col gap-4">
 
-            <UtilsInput v-model="model.capacity_kwp" title="installierte Leistung" placeholder="10" , unit="kWp"
+            <UtilsInput v-model="model.capacity_kwp" title="installierte Leistung" placeholder="6" , unit="kWp"
                 :required="true" />
 
             <div class="flex flex-row justify-between gap-8">
@@ -34,6 +34,6 @@ import ModulesBase from './ModulesBase.vue';
 const model = defineModel<SolarSystem>({ required: true })
 
 onMounted(() => {
-    model.value.azimuth = 180
+    model.value.azimuth = 90
 })
 </script>
