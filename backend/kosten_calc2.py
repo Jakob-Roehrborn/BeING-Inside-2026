@@ -75,11 +75,13 @@ def berechne_stromkosten_nach_14a_dynamisch(df, df_prices):
     
     guenstigstes = min(kosten_modul1_gesamt, kosten_modul2_gesamt, kosten_modul3_gesamt)
     if guenstigstes == kosten_modul1_gesamt:
-        print(f"=> Modul 1 ist am günstigsten.")
+        guenstig_m = 1
+        ersparnis = kosten_modul2_gesamt - kosten_modul1_gesamt
     elif guenstigstes == kosten_modul2_gesamt:
-        print(f"=> Modul 2 ist am günstigsten.")
+        ersparnis = kosten_modul1_gesamt - kosten_modul2_gesamt
+        guenstig_m = 2
     else:
         ersparnis = kosten_modul1_gesamt - kosten_modul3_gesamt
-        print(f"=> Modul 3 ist am günstigsten! (Zusätzliche Ersparnis zu Modul 1: {ersparnis:.2f} €)")
+        guenstig_m = 3
     df_module.to_csv('model.csv', index=False)
-    return df_module, netz_bezug_steuerbar_std.sum(), 
+    return df_module, netz_bezug_steuerbar_std.sum(), guenstigstes, guenstig_m, ersparnis
