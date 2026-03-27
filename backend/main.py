@@ -15,7 +15,7 @@ from data_class import input_data
 
 
 def main_backend(input_user: input_data):
-
+    input_user.general_info.eprice = input_user.general_info.eprice/100
     def timestamp():
         start_date = "2025-01-01 00:00:00"
         end_date = "2025-12-31 23:00:00"
@@ -108,10 +108,14 @@ def main_backend(input_user: input_data):
     pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = png)
 
     print('Solar:', df['solar'].sum())
+
+
     basisgrundpreis = 70.44  
     grundpreis_netz = 30.00  
     messstelle_imsys = 42.02
     messstelle_mMe = 21.01
+    print(df['kosten_dynamisch'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_imsys)
+    print(df['kosten_konstant'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_mMe)
     if input_user.solar_system.exist :
         eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum())
     else :
