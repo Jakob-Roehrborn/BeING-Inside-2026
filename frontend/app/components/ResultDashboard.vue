@@ -74,8 +74,10 @@
                     class="border-indigo-400! border-2 " />
             </div>
 
-            <UtilsDrawer title="Detials">
-                <h1>TEST</h1>
+            <UtilsDrawer title="Detials" class="flex flex-col gap-4">
+                <span class="text-2xl font-semibold" @click="open_diagram(0)">Kumulierte Kostenbilanz übers Jahr</span>
+                <span class="text-2xl font-semibold" @click="open_diagram(1)">Netzeinspeisung und Netzbezug übers Jahr</span>
+                <span class="text-2xl font-semibold" @click="open_diagram(2)">Netzeinspeisung und Netzbezug übers Jahr (kumuliert)</span>
             </UtilsDrawer>
             <div class="my-3" />
 
@@ -128,5 +130,10 @@ const props = defineProps<{
     isLoading: boolean,
     results: outputData | undefined,
 }>()
+
+function open_diagram(n: number) {
+    const DIAGRAMS = ["cost_diagram.html", "plot_grid_exchange.html", "plot_grid_exchange_cumsum.html"]
+    window.location.href = `http://localhost:5000/api/diagrams/${DIAGRAMS[n]}`
+}
 
 </script>
