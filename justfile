@@ -32,4 +32,5 @@ prod-be:
     cd backend && nohup gunicorn -b 127.0.0.1:8000 app:app > be.log 2>&1 &
 
 prod-fe:
-    cd frontend && npm run build && nohup PORT=3000 HOST=127.0.0.1 node .output/server/index.mjs > be.log 2>&1 & 
+    cd frontend && npm run build 
+    cd frontend && nohup PORT=3000 HOST=127.0.0.1 node .output/server/index.mjs > be.log 2>&1 & 
