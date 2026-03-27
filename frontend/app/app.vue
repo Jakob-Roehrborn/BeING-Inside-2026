@@ -80,7 +80,7 @@ const calculateSavings = async () => {
     //   }
 
     try {
-        const response = await fetch('http://localhost:5000/api/calculate', {
+        const response = await fetch('http://being-inside.duckdns.org/api/calculate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(inData.value)

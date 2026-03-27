@@ -7,6 +7,9 @@ export default defineNuxtConfig({
 //   modules: ['@nuxtjs/tailwindcss'],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+        allowedHosts: ["being-inside.duckdns.org"]
+    }
   },
   css: [
     '~/assets/css/main.css'
