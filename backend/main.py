@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 
-from solar_base import generate_weather_2025, generate_weather_master
 from solar_calculation import main_kwp_performance, main_kwp_performance_2025
 from heat_pump import heat_pump
 from haushalt_csv import household
@@ -35,9 +34,6 @@ def main_backend(input_user: input_data):
                         input_user.general_info.coordinates.longitude, 
                         input_user.general_info.postal_code)
         
-        # generate_weather_master(*location_user)
-        # df['solar'] = main_kwp_performance(input_user)
-        generate_weather_2025(*location_user)
         df['solar'] = main_kwp_performance_2025(input_user)
     else:
         df['solar'] = 0
@@ -119,12 +115,12 @@ def main_backend(input_user: input_data):
     df['cumsum_netz_bezug'] = df["netz_bezug"].cumsum()
     df['cumsum_netz_einspeisung'] = df["netz_einspeisung"].cumsum()
 
-    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = True)
-    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Fixer Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife', png = True)
-    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = True)
+    png = False
+    pt.plot_grid_exchange_cumsum(df,['cumsum_netz_bezug','cumsum_netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = png)
+    pt.plot_cost(df,['kosten_konstant','kosten_dynamisch'], rolling_hours = 24*7, title = f'Fixer Stromtarife ({input_user.general_info.eprice*100} ct/kWh) vs. Dynamischer Stromtarife', png = png)
+    pt.plot_grid_exchange(df,['netz_bezug','netz_einspeisung'], rolling_hours = 24*7, title = 'Einspeisung vs Netzbezug', png = png)
 
-    df.to_csv('test_df.csv', index=False)
-
+    print('Solar:', df['solar'].sum())
 
     return output_data( # muss noch angepasst werden 
         netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),
