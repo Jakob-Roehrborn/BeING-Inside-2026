@@ -164,9 +164,7 @@ def main_kwp_performance_2025(user, year = 2025, wind = True):
     df = solar_csv.generate_weather_2025_windspeed(user.general_info.coordinates.latitude, 
                     user.general_info.coordinates.longitude, 
                     user.general_info.postal_code)
-    
-    csv_path = os.path.join(r"solar_base", f"solar_base_{user.general_info.postal_code}_{year}.csv")
-  
+      
     ergebnis_df = calculate_tilted_irradiance_2025(df, 
                                             user.solar_system.tilt,
                                             user.solar_system.azimuth, 

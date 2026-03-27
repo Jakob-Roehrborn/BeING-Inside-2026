@@ -46,7 +46,7 @@ def main_backend(input_user: input_data):
         df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit, input_user.ecar.anteil_zu_Hause)
     else:
         df['ecar'] = 0
-        
+
     df['household'] = household()*input_user.general_info.total_consumption      
     df['total_consumption'] = (
         df['household'] + 
@@ -139,6 +139,7 @@ def weather_cvs_exists(plz):
 
 if __name__ == "__main__":
     input_user = js.load_user_data()
+    js.update_config_from_api(input_user)
     main_backend(input_user)
     # df = pd.DataFrame()
     # x, df['smart'] = main_backend(smart=True, ladezeit=13)
