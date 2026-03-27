@@ -11,6 +11,11 @@ PASSWORD = 'bittebittegeh'
 HOST = "192.168.12.1"
 PORT = "5000"
 
+STATIC_IP = "192.168.12.5"
+SUBNET_MASK = "255.255.255.0"
+GATEWAY = "192.168.12.1"
+DNS = "192.168.12.1"
+
 #------------------------Logic-----------------------
 #Module = [PV,EV,WP,Batterie]
 pin_auto = Pin(15, Pin.IN, Pin.PULL_UP)
@@ -79,8 +84,9 @@ def network_init():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.config(pm = 0xa11140)
+    wlan.ifconfig((STATIC_IP, SUBNET_MASK, GATEWAY, DNS))
+    wlan.connect(SSID, PASSWORD)
     while not wlan.isconnected():
-        wlan.connect(SSID, PASSWORD)
         print("connecting")
         time.sleep(1)
     print("con successfull")
