@@ -95,7 +95,7 @@ def main_backend(input_user: input_data):
     
 
     df_module = pd.DataFrame()
-    df_module, controllable_load,  guenstigstes, guenstig_m, ersparnis = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
+    df_module, controllable_load, guenstig_m, ersparnis = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
     df['kosten_konstant'] = (-(-input_user.general_info.eprice * df['netz_bezug'] + 0.0778 * df['netz_einspeisung'])).cumsum()
     df['kosten_dynamisch'] = -df['ges_price'].cumsum()
 
@@ -128,7 +128,6 @@ def main_backend(input_user: input_data):
         cost_modul_2 = df_module['Modul2'].sum(),
         cost_modul_3 = df_module['Modul3'].sum(),
         
-        guenstigstes =  guenstigstes, 
         guenstig_m =  guenstig_m,
         ersparnis =   ersparnis)
 
