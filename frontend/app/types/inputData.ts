@@ -55,7 +55,7 @@ export const defaultData: inputData = {
         verbrauch_kwh_pro_100km: 14,
         akku_grosse: 64,
         start_ladezeit: 12,
-        anteil_zu_Hause: 75,
+        anteil_zu_Hause: 0.75,
     },
     memory: {
         exist: false,
