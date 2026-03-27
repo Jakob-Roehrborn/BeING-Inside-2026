@@ -74,10 +74,12 @@
                     class="border-indigo-400! border-2 " />
             </div>
 
-            <UtilsDrawer title="Detials" class="flex flex-col gap-4">
-                <span class="text-2xl font-semibold" @click="open_diagram(0)">Kumulierte Kostenbilanz übers Jahr</span>
-                <span class="text-2xl font-semibold" @click="open_diagram(1)">Netzeinspeisung und Netzbezug übers Jahr</span>
-                <span class="text-2xl font-semibold" @click="open_diagram(2)">Netzeinspeisung und Netzbezug übers Jahr (kumuliert)</span>
+            <UtilsDrawer title="Detailierte Diagramme" >
+                <div class="flex flex-col gap-4">
+                    <span class="font-semibold bg-slate-200 rounded-lg" @click="open_diagram(0)">Kumulierte Kostenbilanz übers Jahr</span>
+                    <span class="font-semibold bg-slate-200 rounded-lg" @click="open_diagram(0)">Netzeinspeisung und Netzbezug übers Jahr</span>
+                    <span class="font-semibold bg-slate-200 rounded-lg" @click="open_diagram(2)">Netzeinspeisung und Netzbezug übers Jahr (kumuliert)</span>
+                </div>
             </UtilsDrawer>
             <div class="my-3" />
 
