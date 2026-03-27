@@ -112,7 +112,7 @@ def main_backend(input_user: input_data):
 
     basisgrundpreis = 70.44  
     grundpreis_netz = 30.00  
-    messstelle_imsys = 42.02
+    messstelle_imsys = 33.61
     messstelle_mMe = 21.01
     print(df['kosten_dynamisch'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_imsys)
     print(df['kosten_konstant'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_mMe)
@@ -133,7 +133,7 @@ def main_backend(input_user: input_data):
         
         cost_dynamic = df['kosten_dynamisch'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_imsys, # zu bezahlen für den Kunden = positiv
         cost_const = df['kosten_konstant'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_mMe,
-        savings_dynamic = df['kosten_konstant'].iat[-1] - df['kosten_dynamisch'].iat[-1], # Ersparnis mit flexiblem Strompreis
+        savings_dynamic = df['kosten_konstant'].iat[-1] + messstelle_mMe - df['kosten_dynamisch'].iat[-1] - messstelle_imsys, # Ersparnis mit flexiblem Strompreis
         
         cost_modul_1 = df_module['Modul1'].sum(),
         cost_modul_2 = df_module['Modul2'].sum(),
