@@ -142,7 +142,7 @@ def performance_pvlib(df, kwp_anlage, efficiency=0.85):
     # industrielle Montagesysteme -> open_rack_glass_steel
 
     temp_params = pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS['sapm']['insulated_back_glass_polymer']
-    wind_speed = df['wind_speed'] # if 'wind_speed' in df.columns else 2
+    wind_speed = df['wind_speed'] if 'wind_speed' in df.columns else 2
     
     t_cell = pvlib.temperature.sapm_cell(
         poa_global=df['leistung_geneigt'],
