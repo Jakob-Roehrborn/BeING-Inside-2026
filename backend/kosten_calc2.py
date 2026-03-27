@@ -51,16 +51,16 @@ def berechne_stromkosten_nach_14a_dynamisch(df, df_prices):
     
 
     df_module["Modul1"] = (df['netz_bezug'] * ap_standard_brutto_std) + anteil_fixkosten_std_m1
-    kosten_modul1_gesamt = df_module['Modul1'].sum()
+    kosten_modul1_gesamt = df_module['Modul1'].sum()-(0.0778*df['netz_einspeisung'].sum())
     df_module["Modul2"] = ((netz_bezug_haushalt_std * ap_standard_brutto_std) + (fixkosten_modul1_brutto / 8760)) + \
                           ((netz_bezug_steuerbar_std * ap_anlage_brutto_std) + (fixkosten_anlage_brutto / 8760))
-    kosten_modul2_gesamt = df_module['Modul2'].sum()
+    kosten_modul2_gesamt = df_module['Modul2'].sum()-(0.0778*df['netz_einspeisung'].sum())
 
     
     # NEU: Eigene Spalte für Modul 3 pro Stunde
     df_module["Modul3"] = (df['netz_bezug'] * ap_modul3_brutto_std_ct / 100) + fixkosten_modul3_brutto_std
 
-    kosten_modul3_gesamt = df_module['Modul3'].sum()
+    kosten_modul3_gesamt = df_module['Modul3'].sum()-(0.0778*df['netz_einspeisung'].sum())
 
     # --- AUSGABE ---
     print(f"\n--- DYNAMISCHER STROMKOSTENVERGLEICH (INKL. MODUL 3) ---")

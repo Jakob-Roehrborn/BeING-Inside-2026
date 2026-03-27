@@ -15,7 +15,7 @@ from data_class import input_data
 
 
 def main_backend(input_user: input_data):
-
+    input_user.general_info.eprice = input_user.general_info.eprice/100
     def timestamp():
         start_date = "2025-01-01 00:00:00"
         end_date = "2025-12-31 23:00:00"
@@ -109,6 +109,17 @@ def main_backend(input_user: input_data):
 
     print('Solar:', df['solar'].sum())
 
+
+    basisgrundpreis = 70.44  
+    grundpreis_netz = 30.00  
+    messstelle_imsys = 42.02
+    messstelle_mMe = 21.01
+    print(df['kosten_dynamisch'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_imsys)
+    print(df['kosten_konstant'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_mMe)
+    if input_user.solar_system.exist :
+        eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum())
+    else :
+        eigenverbrauch_p = 0
     return output_data( # muss noch angepasst werden 
         netz_einspeisung_kwh = (df["netz_einspeisung"]).sum(),
         netz_bezug_kwh = (df["netz_bezug"]).sum(),
@@ -118,10 +129,10 @@ def main_backend(input_user: input_data):
         household = df["household"].sum(),
         heat_pump = df['heat_pump'].sum(),
         controllable_load = controllable_load, 
-        eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum()),
+        eigenverbrauch_p = eigenverbrauch_p,
         
-        cost_dynamic = df['kosten_dynamisch'].iat[-1], # zu bezahlen für den Kunden = positiv
-        cost_const = df['kosten_konstant'].iat[-1],
+        cost_dynamic = df['kosten_dynamisch'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_imsys, # zu bezahlen für den Kunden = positiv
+        cost_const = df['kosten_konstant'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_mMe,
         savings_dynamic = df['kosten_konstant'].iat[-1] - df['kosten_dynamisch'].iat[-1], # Ersparnis mit flexiblem Strompreis
         
         cost_modul_1 = df_module['Modul1'].sum(),
