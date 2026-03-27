@@ -56,6 +56,7 @@ export const defaultData: inputData = {
         akku_grosse: 64,
         start_ladezeit: 12,
         anteil_zu_Hause: 0.75,
+        wallbox: false
     },
     memory: {
         exist: false,
@@ -69,5 +70,6 @@ export const defaultData: inputData = {
         total_consumption: 3200,
         postal_code: "01067",
         eprice: 0.37,
+        smart: false
     }
 }
