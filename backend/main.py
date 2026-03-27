@@ -112,7 +112,7 @@ def main_backend(input_user: input_data):
 
     basisgrundpreis = 70.44  
     grundpreis_netz = 30.00  
-    messstelle_imsys = 42.02
+    messstelle_imsys = 33.61
     messstelle_mMe = 21.01
     print(df['kosten_dynamisch'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_imsys)
     print(df['kosten_konstant'].iat[-1]+basisgrundpreis+grundpreis_netz+messstelle_mMe)
