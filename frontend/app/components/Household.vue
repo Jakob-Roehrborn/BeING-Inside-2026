@@ -20,7 +20,7 @@
             <UtilPersonSlider class="w-full" v-model="people" />
         </div>
         
-        <UtilsInput v-model="model.eprice" title="Bisheriger Stromtarif" placeholder="0.37" unit="€/kWh" />
+        <UtilsInput v-model="model.eprice" title="Bisheriger Stromtarif" placeholder="37" unit="ct/kWh" />
         
         <div class="my-6"/>
 

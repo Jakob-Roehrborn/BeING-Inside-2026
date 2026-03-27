@@ -44,7 +44,7 @@ export interface GeneralInfo {
 export const defaultData: inputData = {
     solar_system: {
         exist: false,
-        capacity_kwp: 10, 
+        capacity_kwp: 6, 
         azimuth: 180,
         tilt: 35,
         area_sqm: 30,
@@ -69,7 +69,7 @@ export const defaultData: inputData = {
     general_info: {
         total_consumption: 3200,
         postal_code: "01067",
-        eprice: 0.37,
+        eprice: 37,
         smart: false
     }
 }
