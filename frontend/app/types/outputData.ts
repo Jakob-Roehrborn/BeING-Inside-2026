@@ -11,6 +11,9 @@ export default interface outputData {
   cost_const: number;
   savings_dynamic: number;
 
+  guenstig_m: number;
+  ersparnis: number;
+
   cost_modul_1: number;
   cost_modul_2: number;
   cost_modul_3: number;

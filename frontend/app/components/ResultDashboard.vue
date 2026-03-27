@@ -29,9 +29,10 @@
 
                 <!-- <ResultWindow title="Ersparte Kosten mit dem dynamischen Tarif" :value="results.savings_dynamic" unit="€" class="bg-green-50! text-3xl!"/> -->
                 <div
-                    class="flex flex-col w-1/2 bg-green-50 border justify-between border-green-200 rounded-xl p-4 text-center shadow-inner">
+                    class="flex flex-col w-1/2  border justify-betwee rounded-xl p-4 text-center shadow-inner"
+                    :class="results.savings_dynamic > 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'">
                     <h3 class="text-sm font-medium text-green-800 uppercase">
-                        Ersparte Kosten
+                        Insgesamt erspart
                     </h3>
                     <div class="text-lg md:text-5xl font-extrabold text-green-900 leading-none">
                         {{ results.savings_dynamic.toFixed(2) }} €
@@ -85,15 +86,16 @@
 
             <!-- Sektion: EnWG Modul -->
             <div class="space-y-4">
-                <h4 class="text-lg font-semibold text-slate-800">Einsparung durch §14a EnWG Modul</h4>
+                <h4 class="text-lg font-semibold text-slate-800">Kosten nach Modulen §14a EnWG</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <ResultWindow title="Modul 1" :value="results.cost_modul_1" unit="€" class="outline-2"
-                        :class="best_module == 0 ? 'bg-green-50! outline-green-100' : 'outline-red-50'" />
+                        :class="results.guenstig_m == 1 ? 'bg-green-50! outline-green-100' : 'outline-red-50 bg-red-50!'" />
                     <ResultWindow title="Modul 2" :value="results.cost_modul_2" unit="€" class="outline-2"
-                        :class="best_module == 1 ? 'bg-green-50! outline-green-100' : 'outline-red-50'" />
+                        :class="results.guenstig_m == 2 ? 'bg-green-50! outline-green-100' : 'outline-red-50 bg-red-50!'" />
                     <ResultWindow title="Modul 3" :value="results.cost_modul_3" unit="€" class="outline-2"
-                        :class="best_module == 2 ? 'bg-green-50! outline-green-100' : 'outline-red-50'" />
+                        :class="results.guenstig_m == 3 ? 'bg-green-50! outline-green-100' : 'outline-red-50 bg-red-50!'" />
                 </div>
+                <ResultWindow class="w-full bg-green-50! outline-green-100" title="Ersparnis durch Auswahl des besten Moduls" unit="€" :value="results.ersparnis"/>
             </div>
 
         </div>
