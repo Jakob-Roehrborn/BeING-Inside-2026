@@ -46,7 +46,7 @@ def main_backend(input_user: input_data):
         df['ecar'] = simuliere_e_auto_mit_soc(input_user.ecar.akku_grosse, input_user.ecar.ziel_jahreskilometer, input_user.ecar.verbrauch_kwh_pro_100km, ladeleistung, input_user.ecar.start_ladezeit, input_user.ecar.anteil_zu_Hause)
     else:
         df['ecar'] = 0
-        
+
     df['household'] = household()*input_user.general_info.total_consumption      
     df['total_consumption'] = (
         df['household'] + 
@@ -95,7 +95,7 @@ def main_backend(input_user: input_data):
     
 
     df_module = pd.DataFrame()
-    df_module, controllable_load = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
+    df_module, controllable_load, guenstig_m, ersparnis = berechne_stromkosten_nach_14a_dynamisch(df, df_prices)
     df['kosten_konstant'] = (-(-input_user.general_info.eprice * df['netz_bezug'] + 0.0778 * df['netz_einspeisung'])).cumsum()
     df['kosten_dynamisch'] = -df['ges_price'].cumsum()
 
@@ -126,7 +126,12 @@ def main_backend(input_user: input_data):
         
         cost_modul_1 = df_module['Modul1'].sum(),
         cost_modul_2 = df_module['Modul2'].sum(),
-        cost_modul_3 = df_module['Modul3'].sum())
+        cost_modul_3 = df_module['Modul3'].sum(),
+        
+        guenstig_m =  guenstig_m,
+        ersparnis =   ersparnis)
+
+
         #eigenverbrauch_p = 1-(df["netz_einspeisung"].sum()/(df["solar"]).sum())
 
 # prüft ob Wetterdaten für eine plz bereits vorhanden ist
@@ -139,6 +144,7 @@ def weather_cvs_exists(plz):
 
 if __name__ == "__main__":
     input_user = js.load_user_data()
+    js.update_config_from_api(input_user)
     main_backend(input_user)
     # df = pd.DataFrame()
     # x, df['smart'] = main_backend(smart=True, ladezeit=13)
